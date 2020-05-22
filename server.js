@@ -34,3 +34,9 @@ http.createServer(app).listen(3000);
 app.get("/todos.json", function (req, res) { 
 res.json(toDos);
 });
+
+app.post("/todos", function (req, res) { 
+console.log("Данные были отправлены на сервер!"); 
+// простой объект отправлен обратно 
+res.json({"message":"Вы размещаетесь на сервере!"}); 
+});
