@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "server.js",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mongoose": "^5.9.9"
   },
   "devDependencies": {},
   "scripts": {
@@ -13,5 +14,13 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexandertopskiy/practice6.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alexandertopskiy/practice6/issues"
+  },
+  "homepage": "https://github.com/alexandertopskiy/practice6#readme",
   "description": ""
 }
