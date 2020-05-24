@@ -35,30 +35,65 @@ var main = function (toDoObjects) {
 		return toDo.description;
 	});
 	
-	$(".tabs a span").toArray().forEach(function (element) {
-		// создаем обработчик щелчков для этого элемента
-		$(element).on("click", function() {
-			// поскольку мы используем версию элемента jQuery,
-			// нужно создать временную переменную, 
-			// чтобы избежать постоянного обновления
-			var $element = $(element);
-			$(".tabs a span").removeClass("active");
-			$element.addClass("active");
-			$("main .content").empty();
-			if ($element.parent().is(":nth-child(1)")) {
-				for (var i = toDos.length-1; i > -1; i--) {
-					$(".content").append($("<li>").text(toDos[i]));
-				}
-			} else if ($element.parent().is(":nth-child(2)")) {
+	// создание пустого массива с вкладками 
+	var tabs = [];
+
+	// добавляем вкладку Новые 
+	tabs.push({ 
+		"name":"Новые", 
+		"content":function (callback) {
+			$.get("todos.json", function (toDoObjects) {
+				// создание $content для Новые 
+				var $content = $("<ul>");
+				toDos = toDoObjects.map(function (toDo) {
+               		return toDo.description;
+             	});
+	   			// генерация и отображение содержимого вкладки Новые 
+	   			for (var i = toDos.length-1; i >= 0; i--) { 
+	   				$content.append($("<li>").text(toDos[i]));
+	   			}
+	   			// return $content;
+	   			callback(null,$content);
+   			}).fail(function (jqXHR, textStatus, error) {
+   				   // в этом случае мы отправляем ошибку вместе с null для $content
+				callback(error, null);
+			});		
+		}
+	});
+
+	// добавляем вкладку Старые 
+	tabs.push({ 
+		"name":"Старые", 
+		"content":function (callback) {
+			$.get("todos.json", function (toDoObjects) {
+				// создание $content для Старые 
+				// генерация и отображение содержимого вкладки Новые
+				var $content = $("<ul>");
+				toDos = toDoObjects.map(function (toDo) {
+               		return toDo.description;
+             	});
 				toDos.forEach(function (todo) {
-					$(".content").append($("<li>").text(todo));
+					$content.append($("<li>").text(todo));
 				});
-			} else if ($element.parent().is(":nth-child(3)")) {
-				// ЭТО КОД ДЛЯ ВКЛАДКИ ТЕГИ
-				var organizedByTag = organizeByTags(toDoObjects);
+				callback(null,$content);
+   			}).fail(function (jqXHR, textStatus, error) {
+   				   // в этом случае мы отправляем ошибку вместе с null для $content
+				callback(error, null);
+			});
+		}
+	});
+
+	// добавляем вкладку Теги 
+	tabs.push({ 
+		"name":"Теги", 
+		"content":function (callback) {
+			$.get("todos.json", function (toDoObjects) {	
+				// создание $content для Теги 
+				var organizedByTag = organizeByTags(toDoObjects),
+					$content;
 				organizedByTag.forEach(function (tag) {
-					var $tagName = $("<h3>").text(tag.name),
-					$content = $("<ul>");
+					var $tagName = $("<h3>").text(tag.name);
+						$content = $("<ul>");
 					tag.toDos.forEach(function (description) {
 						var $li = $("<li>").text(description);
 						$content.append($li);
@@ -66,12 +101,25 @@ var main = function (toDoObjects) {
 					$("main .content").append($tagName);
 					$("main .content").append($content);
 				});
-			} else if ($element.parent().is(":nth-child(4)")) {
+				callback(null,$content);
+			}).fail(function (jqXHR, textStatus, error) {
+				// в этом случае мы отправляем ошибку вместе с null для $content
+				callback(error, null);
+			});
+		}
+	});
+
+	// Создаем вкладку Добавить 
+	tabs.push({ 
+		"name":"Добавить", 
+		"content":function () {
+			$.get("todos.json", function (toDoObjects) {	
+				// создание $content для Добавить 
 				var $input = $("<input>").addClass("description"), 
-				$textInput = $("<p>").text("Введите новую задачу: "),
-				$tagInput = $("<input>").addClass("tags"),
-				$tagLabel = $("<p>").text("Тэги: "),
-				$button = $("<button>").text("+");
+					$textInput = $("<p>").text("Введите новую задачу: "),
+					$tagInput = $("<input>").addClass("tags"),
+					$tagLabel = $("<p>").text("Тэги: "),
+					$button = $("<button>").text("+");
 				$("main .content").append($textInput).append($input).append($tagLabel).append($tagInput).append($button); 
 				function btnfunc() {
 					var description = $input.val(),
@@ -79,14 +127,6 @@ var main = function (toDoObjects) {
 						// создаем новый элемент списка задач
 						newToDo = {"description":description, "tags":tags};
 					$.post("todos", newToDo, function(result) {
-						console.log(result);
-						// нужно отправить новый объект на клиент
-						// после получения ответа сервера
-						toDoObjects.push(newToDo);
-						// обновляем toDos
-						toDos = toDoObjects.map(function (toDo) {
-							return toDo.description;
-						});
 						$input.val("");
 						$tagInput.val("");
 						$(".tabs a:first-child span").trigger("click");
@@ -100,12 +140,38 @@ var main = function (toDoObjects) {
 						btnfunc();
 					}
 				});
-			}
+			});
+		}
+	});
+
+	tabs.forEach(function (tab) {
+		var $aElement = $("<a>").attr("href",""), 
+			$spanElement = $("<span>").text(tab.name); 
+		$aElement.append($spanElement);
+		$("main .tabs").append($aElement);
+
+		$spanElement.on("click", function () {
+			var $content;
+			$(".tabs a span").removeClass("active"); 
+			$spanElement.addClass("active");
+			$("main .content").empty();
+
+			tab.content(function (err, $content) {
+				if(err !== null ){
+					alert("Возникла проблема при обработке запроса: " + err);
+				} else {
+					$("main .content").append($content);
+				}			
+			});
+
 			return false;
 		});
 	});
+
 	$(".tabs a:first-child span").trigger("click");
+
 };
+
 $(document).ready(function() {
 	$.getJSON("todos.json", function (toDoObjects) {
 		main(toDoObjects);
