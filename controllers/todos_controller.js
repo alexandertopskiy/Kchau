@@ -32,12 +32,15 @@ ToDosController.show = function (req, res) {
 	// находим элемент списка задач с соответствующим ID 
 	ToDo.find({"_id":id}, function (err, todo) {
 		if (err !== null) {
-			res.json(err);
+			// возвращаем внутреннюю серверную ошибку 
+			res.status(500).json(err);
 		} else {
 			if (todo.length > 0) {
-				res.json(todo[0]);
+				// возвращаем успех!
+				res.status(200).json(todo[0]);
 			} else {
-				res.send("Не найдено");
+				// мы не нашли элемент списка задач с этим ID! 
+				res.send(404);
 			}
 		}
 	});
