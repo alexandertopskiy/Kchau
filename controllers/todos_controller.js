@@ -26,4 +26,21 @@ ToDosController.create = function (req, res) {
 	});
 };
 
+ToDosController.show = function (req, res) {
+	// это ID, который мы отправляем через URL
+	var id = req.params.id;
+	// находим элемент списка задач с соответствующим ID 
+	ToDo.find({"_id":id}, function (err, todo) {
+		if (err !== null) {
+			res.json(err);
+		} else {
+			if (todo.length > 0) {
+				res.json(todo[0]);
+			} else {
+				res.send("Не найдено");
+			}
+		}
+	});
+};
+
 module.exports = ToDosController;

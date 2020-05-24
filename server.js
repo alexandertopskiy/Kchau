@@ -16,6 +16,9 @@ http.createServer(app).listen(3000);
 app.use(express.static(__dirname + "/client"));
 
 app.get("/todos.json", ToDosController.index);
+// базовые маршруты CRUD 
+app.get("/todos/:id", ToDosController.show); 
+app.post("/todos", ToDosController.create);
 
 // командуем Express принять поступающие
 // объекты JSON
@@ -32,5 +35,5 @@ mongoose.connect('mongodb://localhost/amazeriffic', {
 		console.log(Error, err.message);
 	});
 
-app.post("/todos", ToDosController.create);
+
 
