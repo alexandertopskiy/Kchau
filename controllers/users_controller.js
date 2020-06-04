@@ -51,4 +51,4 @@ UsersController.destroy = function (req, res) {
 	res.send(200);
 };
 
-module.exports = Users ontroller;
+module.exports = UsersController;

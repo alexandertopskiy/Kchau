@@ -2,6 +2,7 @@ var express = require("express"),
 	http = require("http"),
 	mongoose = require("mongoose"),
 	ToDosController = require("./controllers/todos_controller.js"),
+	UsersController = require("./controllers/users_controller.js"),
 	app = express(); 
 
 http.createServer(app).listen(3000);
@@ -27,11 +28,7 @@ app.get("/todos.json", ToDosController.index);
 app.get("/todos/:id", ToDosController.show); 
 app.post("/todos", ToDosController.create);
 
-app.get("/users/:username/todos.json", ToDosController.index);
-app.post("/users/:username/todos", ToDosController.create);
-app.put("/users/:username/todos/:id", ToDosController.update);
-app.delete("/users/:username/todos/:id", ToDosController.destroy);
-
-
-
-
+app.get("/user/:username/todos.json", ToDosController.index);
+app.post("/user/:username/todos", ToDosController.create);
+// app.put("/user/:username/todos/:id", ToDosController.update);
+app.delete("/user/:username/todos/:id", ToDosController.destroy); 

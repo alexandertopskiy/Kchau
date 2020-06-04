@@ -20,7 +20,7 @@ ToDosController.index = function (req, res) {
 			if (err !== null) {
 				res.json(500, err);
 			} else if (result.length === 0) {
-				res.status(404).json("result_length" : 0);
+				res.status(404).json({"result_length": 0});
 			} else {
 				respondWithToDos({"owner": result[0]._id});
 			}
@@ -78,5 +78,20 @@ ToDosController.show = function (req, res) {
 		}
 	});
 };
+
+ToDosController.destroy = function (req, res) {
+	var id = req.params.id;
+	ToDo.deleteOne({"_id": id}, function (err, todo) {
+		if (err !== null) {
+			res.status(500).json(err);
+		} else {
+			if (todo.n === 1 && todo.ok === 1 && todo.deletedCount === 1) {
+				res.status(200).json(todo);
+			} else {
+				res.status(404).json({"status": 404});
+			}
+		}
+	});
+}
 
 module.exports = ToDosController;
