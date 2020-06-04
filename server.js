@@ -27,8 +27,10 @@ mongoose.connect('mongodb://localhost/amazeriffic', {
 app.get("/todos.json", ToDosController.index);
 app.get("/todos/:id", ToDosController.show); 
 app.post("/todos", ToDosController.create);
+app.put("/todos/:id", ToDosController.update);
+app.delete("/todos/:id", ToDosController.destroy);
 
 app.get("/user/:username/todos.json", ToDosController.index);
 app.post("/user/:username/todos", ToDosController.create);
-// app.put("/user/:username/todos/:id", ToDosController.update);
+app.put("/user/:username/todos/:id", ToDosController.update);
 app.delete("/user/:username/todos/:id", ToDosController.destroy); 
