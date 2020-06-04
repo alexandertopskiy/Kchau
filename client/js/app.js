@@ -22,7 +22,7 @@ var organizeByTags = function (toDoObjects) {
 				toDosWithTag.push(toDo.description);
 			}
 		});
-		// мы связываем каждый тег с объектом, который // содержит название тега и массив
+		// мы связываем каждый тег с объектом, который содержит название тега и массив
 		return { "name": tag, "toDos": toDosWithTag };
 	});
 	return tagObjects;
@@ -73,19 +73,14 @@ var liaWithEditOrDeleteOnClick = function (todo, callback) {
 
 var main = function (toDoObjects) {
 	"use strict";
-	var toDos = toDoObjects.map(function (toDo) {
-		// просто возвращаем описание
-		// этой задачи
-		return toDo.description;
-	});
-	
-	// создание пустого массива с вкладками 
+	// создание пустого массива с вкладками
 	var tabs = [];
-
-	// добавляем вкладку Новые 
-	tabs.push({ 
-		"name":"Новые", 
-		"content":function (callback) {
+	// добавляем вкладку Новые
+	tabs.push({
+		"name": "Новые",
+		// создаем функцию content
+		// так, что она принимает обратный вызов
+		"content": function(callback) {
 			$.getJSON("todos.json", function (toDoObjects) {
 				var $content,
 					i;
@@ -96,19 +91,17 @@ var main = function (toDoObjects) {
 					});
 					$content.append($todoListItem);
 				}
-	   			// return $content;
-	   			callback(null,$content);
-   			}).fail(function (jqXHR, textStatus, error) {
-   				   // в этом случае мы отправляем ошибку вместе с null для $content
+				callback(null, $content);
+			}).fail(function (jqXHR, textStatus, error) {
 				callback(error, null);
-			});		
+			});
 		}
 	});
 
-	// добавляем вкладку Старые 
-	tabs.push({ 
-		"name":"Старые", 
-		"content":function (callback) {
+	// добавляем вкладку Старые
+	tabs.push({
+		"name": "Старые",
+		"content": function(callback) {
 			$.getJSON("todos.json", function (toDoObjects) {
 				var $content,
 					i;
@@ -126,9 +119,9 @@ var main = function (toDoObjects) {
 		}
 	});
 
-	// добавляем вкладку Теги 
-	tabs.push({ 
-		"name":"Теги", 
+	// добавляем вкладку Теги
+	tabs.push({
+		"name": "Теги",
 		"content":function (callback) {
 			$.get("todos.json", function (toDoObjects) {	
 				// создание $content для Теги 
@@ -152,9 +145,9 @@ var main = function (toDoObjects) {
 		}
 	});
 
-	// Создаем вкладку Добавить 
-	tabs.push({ 
-		"name":"Добавить", 
+	// создаем вкладку Добавить
+	tabs.push({
+		"name": "Добавить",
 		"content":function () {
 			$.get("todos.json", function (toDoObjects) {	
 				// создание $content для Добавить 
@@ -168,7 +161,7 @@ var main = function (toDoObjects) {
 					var description = $input.val(),
 						tags = $tagInput.val().split(","),
 						// создаем новый элемент списка задач
-						newToDo = {"description":description, "tags":tags, "username":null};
+						newToDo = {"description":description, "tags":tags};
 					$.post("todos", newToDo, function(result) {
 						$input.val("");
 						$tagInput.val("");
@@ -188,32 +181,29 @@ var main = function (toDoObjects) {
 	});
 
 	tabs.forEach(function (tab) {
-		var $aElement = $("<a>").attr("href",""), 
-			$spanElement = $("<span>").text(tab.name); 
+		var $aElement = $("<a>").attr("href",""),
+			$spanElement = $("<span>").text(tab.name);
 		$aElement.append($spanElement);
 		$("main .tabs").append($aElement);
 
 		$spanElement.on("click", function () {
 			var $content;
-			$(".tabs a span").removeClass("active"); 
+			$(".tabs a span").removeClass("active");
 			$spanElement.addClass("active");
 			$("main .content").empty();
-
 			tab.content(function (err, $content) {
-				if(err !== null ){
-					alert("Возникла проблема при обработке запроса: " + err);
+				if (err !== null) {
+					alert ("Возникла проблема при обработке запроса: " + err);
 				} else {
 					$("main .content").append($content);
-				}			
+				}
 			});
-
 			return false;
 		});
 	});
 
 	$(".tabs a:first-child span").trigger("click");
-
-};
+}
 
 $(document).ready(function() {
 	$.getJSON("todos.json", function (toDoObjects) {

@@ -6,7 +6,7 @@ var ToDo = require("../models/todo.js"),
 ToDosController.index = function (req, res) { 
 	var username = req.params.username || null,
 		respondWithToDos;
-	respondWithToDos = function (query) {
+	respondWithToDos = function (query) { // Обратить внимание на query
 		ToDo.find(query, function (err, toDos) {
 			if (err !== null) {
 				res.json(500, err);
@@ -39,40 +39,27 @@ ToDosController.create = function (req, res) {
 
 	console.log("username: " + username);
 
-	// временный костыль
-	newToDo.owner = null;
-	newToDo.save(function (err, result) {
-		console.log(result);
-		if (err !== null) {
-			// элемент не был сохранен!
-			console.log(err);
-			res.json(500, err);
+	User.find({"username": username}, function (err, result) {
+		if (err) {
+			res.send(500);
 		} else {
-			res.status(200).json(result);
+			if (result.length === 0) {
+				newToDo.owner = null;
+			} else {
+				newToDo.owner = result[0]._id;
+			}
+			newToDo.save(function (err, result) {
+				console.log(result);
+				if (err !== null) {
+					// элемент не был сохранен!
+					console.log(err);
+					res.json(500, err);
+				} else {
+					res.status(200).json(result);
+				}
+			});
 		}
 	});
-
-	// User.find({"username": username}, function (err, result) {
-	// 	if (err) {
-	// 		res.send(500);
-	// 	} else {
-	// 		if (result.length === 0) {
-	// 			newToDo.owner = null;
-	// 		} else {
-	// 			newToDo.owner = result[0]._id;
-	// 		}
-	// 		newToDo.save(function (err, result) {
-	// 			console.log(result);
-	// 			if (err !== null) {
-	// 				// элемент не был сохранен!
-	// 				console.log(err);
-	// 				res.json(500, err);
-	// 			} else {
-	// 				res.status(200).json(result);
-	// 			}
-	// 		});
-	// 	}
-	// });
 };
 
 ToDosController.show = function (req, res) {
