@@ -36,27 +36,43 @@ ToDosController.create = function (req, res) {
 		"description": req.body.description,
 		"tags": req.body.tags
 	});
-	User.find({"username": username}, function (err, result) {
-		if (err) {
-			res.send(500);
+
+	console.log("username: " + username);
+
+	// временный костыль
+	newToDo.owner = null;
+	newToDo.save(function (err, result) {
+		console.log(result);
+		if (err !== null) {
+			// элемент не был сохранен!
+			console.log(err);
+			res.json(500, err);
 		} else {
-			if (result.length === 0) {
-				newToDo.owner = null;
-			} else {
-				newToDo.owner = result[0]._id;
-			}
-			newToDo.save(function (err, result) {
-				console.log(result);
-				if (err !== null) {
-					// элемент не был сохранен!
-					console.log(err);
-					res.json(500, err);
-				} else {
-					res.status(200).json(result);
-				}
-			});
+			res.status(200).json(result);
 		}
 	});
+
+	// User.find({"username": username}, function (err, result) {
+	// 	if (err) {
+	// 		res.send(500);
+	// 	} else {
+	// 		if (result.length === 0) {
+	// 			newToDo.owner = null;
+	// 		} else {
+	// 			newToDo.owner = result[0]._id;
+	// 		}
+	// 		newToDo.save(function (err, result) {
+	// 			console.log(result);
+	// 			if (err !== null) {
+	// 				// элемент не был сохранен!
+	// 				console.log(err);
+	// 				res.json(500, err);
+	// 			} else {
+	// 				res.status(200).json(result);
+	// 			}
+	// 		});
+	// 	}
+	// });
 };
 
 ToDosController.show = function (req, res) {

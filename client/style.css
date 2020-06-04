@@ -145,5 +145,27 @@ footer .sitemap {
 	box-shadow: 0 -3px 0 11px #ddd;
 }
 
-
-
+.linkEdit {
+	display: inline-block;
+	float: right;
+	width: 110px;
+	height: 16px;
+	padding-left: 15px; 
+}
+.linkEdit:hover {
+	background: red;
+	color: white;
+	text-decoration: none;
+} 
+.linkRemove {
+	display: inline-block;
+	float: right;
+	width: 65px;
+	height: 16px;
+	padding-left: 15px; 
+}
+.linkRemove:hover {
+	background: red;
+	color: white;
+	text-decoration: none;
+} 
