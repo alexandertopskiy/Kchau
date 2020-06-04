@@ -1,7 +1,7 @@
 // обратите внимание на то, что нужно перейти в папку, 
 // в которой находится каталог models
 var User = require("../models/user.js"), 
-	Users ontroller = {},
+	UsersController = {},
 	mongoose = require("mongoose");
  
 // проверка, не существует ли уже пользователь 
