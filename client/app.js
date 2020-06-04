@@ -28,48 +28,39 @@ var organizeByTags = function (toDoObjects) {
 	return tagObjects;
 };
 
-var liaWithDeleteOnClick = function(todo) {
+var liaWithEditOrDeleteOnClick = function (todo) {
 	var $todoListItem = $("<li>").text(todo.description),
+		$todoEditLink = $("<a>").attr("href", "todos/" + todo._id),
 		$todoRemoveLink = $("<a>").attr("href", "todos/" + todo._id);
-	$todoRemoveLink.text(" Удалить");
-	console.log("todo._id: " + todo._id);
-	console.log("todo.description: " + todo.description);
-	$todoRemoveLink.on("click", function () {
-		$.ajax({
-			url: "/todos/" + todo._id,
-			type: "DELETE",
-			dataType: 'jsonp',
-      		jsonp: 'jsonp'
-		}).done(function (responde) {
-			$(".tabs a:first-child span").trigger("click");
-		}).fail(function (err) {
-			console.log("error on delete 'todo'!");
-		});
-		return false;
-	});
-	$todoListItem.append($todoRemoveLink);
-	return $todoListItem;
-}
 
-var liaWithEditOnClick = function (todo) {
-	var $todoListItem = $("<li>").text(todo.description),
-		$todoRemoveLink = $("<a>").attr("href", "todos/" + todo._id);
-	$todoRemoveLink.text("Редактировать");
-	$todoRemoveLink.on("click", function() {
+	$todoEditLink.text("Редактировать");
+	$todoEditLink.on("click", function() {
 		var newDescription = prompt("Введите новое наименование для задачи", todo.description);
 		if (newDescription !== null && newDescription.trim() !== "") {
 			$.ajax({
-				"url": "/todos.json/" + todo._id,
+				"url": "/todos/" + todo._id,
 				"type": "PUT",
 				"data": { "description": newDescription },
-				"dataType": 'jsonp',
-      			"jsonp": 'jsonp'
 			}).done(function (responde) {
 				$(".tabs a:nth-child(2) span").trigger("click");
 			}).fail(function (err) {
 				console.log("Произошла ошибка: " + err);
 			});
 		}
+		return false;
+	});
+	$todoListItem.append($todoEditLink);
+
+	$todoRemoveLink.text("Удалить");
+	$todoRemoveLink.on("click", function () {
+		$.ajax({
+			url: "/todos/" + todo._id,
+			type: "DELETE",
+		}).done(function (responde) {
+			$(".tabs a:first-child span").trigger("click");
+		}).fail(function (err) {
+			console.log("error on delete 'todo'!");
+		});
 		return false;
 	});
 	$todoListItem.append($todoRemoveLink);
@@ -96,7 +87,7 @@ var main = function (toDoObjects) {
 					i;
 				$content = $("<ul>");
 				for (i = toDoObjects.length-1; i>=0; i--) {
-					var $todoListItem = liaWithDeleteOnClick(toDoObjects[i]);
+					var $todoListItem = liaWithEditOrDeleteOnClick(toDoObjects[i]);
 					$content.append($todoListItem);
 				}
 	   			// return $content;
@@ -117,7 +108,7 @@ var main = function (toDoObjects) {
 					i;
 				$content = $("<ul>");
 				for (i = 0; i < toDoObjects.length; i++) {
-					var $todoListItem = liaWithEditOnClick(toDoObjects[i]);
+					var $todoListItem = liaWithEditOrDeleteOnClick(toDoObjects[i]);
 					$content.append($todoListItem);
 				}
 				callback(null, $content);
