@@ -44,7 +44,7 @@ UsersController.show = function(req, res) {
 // Создать нового пользователя 
 UsersController.create = function(req, res) {
 	console.log('Вызвано действие: создать пользователя');
-	var username = req.body.id; 
+	var username = req.body.username; 
 	// console.log(username);
 	User.find({"username": username}, function (err, result) {
 	    if (err) {
@@ -74,7 +74,7 @@ UsersController.create = function(req, res) {
 // Обновить существующего пользователя 
 UsersController.update = function (req, res) { 
 	console.log("Вызвано действие: обновить пользователя");
-	var id = req.params.id;
+	var id = req.params.username;
 	var newUsername = {$set: {username: req.body.username}};
 	User.updateOne({"username": username}, newUsername, function (err,user) {
 		if (err !== null) {

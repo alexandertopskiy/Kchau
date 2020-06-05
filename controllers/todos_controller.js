@@ -6,7 +6,7 @@ var ToDo = require("../models/todo.js"),
 ToDosController.index = function (req, res) { 
 	var username = req.params.username || null,
 		respondWithToDos;
-	respondWithToDos = function (query) { // Обратить внимание на query
+	respondWithToDos = function (query) { 
 		ToDo.find(query, function (err, toDos) {
 			if (err !== null) {
 				res.json(500, err);
