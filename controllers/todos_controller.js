@@ -1,9 +1,9 @@
-// обратите внимание на то, что нужно перейти в папку, 
-// в которой находится каталог models
 var ToDo = require("../models/todo.js"),
+	User = require("../models/user.js"),
 	ToDosController = {};
 
 ToDosController.index = function (req, res) { 
+	console.log("Вызван ToDosController.index");
 	var username = req.params.username || null,
 		respondWithToDos;
 	respondWithToDos = function (query) { 
@@ -16,6 +16,7 @@ ToDosController.index = function (req, res) {
 		});
 	};
 	if (username !== null) {
+		console.log("Поиск пользователя: "+username);
 		User.find({"username": username}, function (err, result) {
 			if (err !== null) {
 				res.json(500, err);

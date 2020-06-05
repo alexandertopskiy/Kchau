@@ -40,7 +40,7 @@ var liaWithEditOrDeleteOnClick = function (todo, callback) {
 	$todoRemoveLink.on("click", function () {
 		$.ajax({
 			url: "/todos/" + todo._id,
-			type: "DELETE",
+			type: "DELETE"
 		}).done(function (responde) {
 			callback();
 		}).fail(function (err) {
