@@ -82,10 +82,8 @@ var main = function (toDoObjects) {
 		// так, что она принимает обратный вызов
 		"content": function(callback) {
 			$.getJSON("todos.json", function (toDoObjects) {
-				var $content,
-					i;
-				$content = $("<ul>");
-				for (i = toDoObjects.length-1; i>=0; i--) {
+				var $content = $("<ul>");
+				for (var i = toDoObjects.length-1; i>=0; i--) {
 					var $todoListItem = liaWithEditOrDeleteOnClick(toDoObjects[i], function() {
 						$(".tabs a:first-child span").trigger("click");
 					});
@@ -151,12 +149,22 @@ var main = function (toDoObjects) {
 		"content":function () {
 			$.get("todos.json", function (toDoObjects) {	
 				// создание $content для Добавить 
-				var $input = $("<input>").addClass("description"), 
-					$textInput = $("<p>").text("Введите новую задачу: "),
+				var $textInput = $("<h3>").text("Введите новую задачу: "),
+					$input = $("<input>").addClass("description"), 
+					$textTag = $("<h3>").text("Тэги: "),
 					$tagInput = $("<input>").addClass("tags"),
-					$tagLabel = $("<p>").text("Тэги: "),
-					$button = $("<button>").text("+");
-				$("main .content").append($textInput).append($input).append($tagLabel).append($tagInput).append($button); 
+					$button = $("<button>").text("Добавить"),
+					$content1 = $("<ul>"), $content2 = $("<ul>");
+
+				$content1.append($input);
+				$content2.append($tagInput);
+
+				$("main .content").append($textInput);
+				$("main .content").append($content1);
+				$("main .content").append($textTag);
+				$("main .content").append($content2);
+				$("main .content").append($button); 
+				
 				function btnfunc() {
 					var description = $input.val(),
 						tags = $tagInput.val().split(","),

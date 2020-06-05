@@ -1,9 +1,9 @@
 var main = function (UsersObjects) {
 	"use strict";
 	var $input = $("<input>").addClass("username"),
-		$butRegister = $("<button>").text("Зарегистрироваться"),
-		$butLogin = $("<button>").text("Войти"),
-		$butEdit = $("<button>").text("Изменить имя пользователя"),
+		$butRegister = $("<button>").text("Создать аккаунт"),
+		$butLogin = $("<button>").text("Войти в аккаунт"),
+		$butEdit = $("<button>").text(" Изменить имя пользователя"),
 		$butDestroy = $("<button>").text("Удалить пользователя");
 
 	$butRegister.on("click", function() {
@@ -72,7 +72,7 @@ var main = function (UsersObjects) {
 		if ($input.val() !== "") {
 			if ($input.val() !== null && $input.val().trim() !== "") {
 				var username = $input.val();
-				if (confirm("Действительно удалить пользователя " + username + "?")) {
+				if (confirm("Вы уверены, что хотете удалить пользователя " + username + "?")) {
 					$.ajax({
 						'url': '/users/'+username,
 						'type': 'DELETE',
@@ -89,11 +89,11 @@ var main = function (UsersObjects) {
 		}
 	});
 
-	$("main .container").append($input);
-	$("main .container").append($butRegister);
-	$("main .container").append($butLogin);
-	$("main .container").append($butEdit);
-	$("main .container").append($butDestroy);
+	$("main .authorization").append($input);
+	$("main .authorization").append($butDestroy);
+	$("main .authorization").append($butEdit);
+	$("main .authorization").append($butLogin);
+	$("main .authorization").append($butRegister);
 
 }
 
