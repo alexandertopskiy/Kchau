@@ -1,15 +1,21 @@
 body {
-	background: #f9e933; 
+	background: #e9432d; 
 	font-family: Ubuntu;
 	font-size: 100%;
 }
 
-.title{
-	font-size: 120%;
-	text-decoration: none;
+header img {
 	float: left;
-	width: 570px;
-	font-size: 300%;
+	margin: 0 auto;
+	height: 100%;
+}
+
+.title{
+	font-family: Magneto_RUS_A;
+	text-decoration: none;
+	/*float: ri;*/
+	width: 100%;
+	font-size: 500%;
 	font-style: italic;
 	color: black;
 }
@@ -20,7 +26,7 @@ body {
 
 a {
 	text-decoration: none;
-	color: red;
+	color: black;
 }
 a:hover {
 	text-decoration: underline;
@@ -88,9 +94,7 @@ header {
 }
 header nav {
 	float: right;
-	/*width: 285px;*/
 	padding-top: 15px;
-	font-size: 20px;
 }
 aside {
 	background: white;
@@ -138,17 +142,25 @@ footer {
 	overflow: auto;
 	padding: 10px;
 	font-size: 18px;
+	color: white;
+	color: #f9bf29;
 }
-footer .contact {
-	float: left;
+.contact {
+	float: right;
+	text-align: right;
 	width: 570px;
+	padding-top: 15px;
 }
-footer .sitemap {
+.sitemap {
 	float: right;	
+	padding-top: 15px;
 	width: 285px;
 }
-footer h5 {
-	padding-bottom: 10px;
+footer a {
+	color: #f9bf29;
+}
+footer a:hover {
+	color: white;
 }
 
 .tabs a span {
@@ -160,7 +172,6 @@ footer h5 {
 	font-size:20px;
 	background: #ccc; 
 	padding: 10px;
-
 }
 .tabs a span.active { 
 	background: #ddd; 

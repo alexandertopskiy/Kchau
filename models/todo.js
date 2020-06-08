@@ -5,6 +5,7 @@ var mongoose = require("mongoose"),
 var ToDoSchema = mongoose.Schema({
 	description: String,
 	tags: [ String ],
+	status : String,
 	owner : { type: ObjectId, ref: "User" }
 });
 

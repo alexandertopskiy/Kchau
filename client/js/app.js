@@ -36,37 +36,48 @@ var liaWithEditOrDeleteOnClick = function (todo, callback) {
 	$todoEditLink.addClass("linkEdit");
 	$todoRemoveLink.addClass("linkRemove");
 
-	$todoRemoveLink.text("Удалить");
-	$todoRemoveLink.on("click", function () {
-		$.ajax({
-			url: "/todos/" + todo._id,
-			type: "DELETE"
-		}).done(function (responde) {
-			callback();
-		}).fail(function (err) {
-			console.log("error on delete 'todo'!");
-		});
-		return false;
-	});
-	$todoListItem.append($todoRemoveLink);
 
-	$todoEditLink.text("Редактировать");
-	$todoEditLink.on("click", function() {
-		var newDescription = prompt("Введите новое наименование для задачи", todo.description);
-		if (newDescription !== null && newDescription.trim() !== "") {
+
+	if (todo.status === 'Не оплачено') {
+		$todoEditLink.text("Оплатить");
+		$todoEditLink.on("click", function() {
+
+			// var newDescription = prompt("Введите новое наименование для задачи", todo.description);
+			var newDescription = todo.description + "[Оплачено]";
+
+			if (newDescription !== null && newDescription.trim() !== "") {
+				$.ajax({
+					"url": "/todos/" + todo._id,
+					"type": "PUT",
+					"data": { "description": newDescription },
+				}).done(function (responde) {
+					todo.status = 'Оплачено';
+					callback();
+				}).fail(function (err) {
+					console.log("Произошла ошибка: " + err);
+				});
+			}
+			// $todoEditLink.text(" ");
+
+			return false;
+		});	
+		$todoListItem.append($todoEditLink);
+	}
+	else {
+		$todoRemoveLink.text("Удалить");
+		$todoRemoveLink.on("click", function () {
 			$.ajax({
-				"url": "/todos/" + todo._id,
-				"type": "PUT",
-				"data": { "description": newDescription },
+				url: "/todos/" + todo._id,
+				type: "DELETE"
 			}).done(function (responde) {
 				callback();
 			}).fail(function (err) {
-				console.log("Произошла ошибка: " + err);
+				console.log("error on delete 'todo'!");
 			});
-		}
-		return false;
-	});
-	$todoListItem.append($todoEditLink);
+			return false;
+		});
+		$todoListItem.append($todoRemoveLink);
+	}
 
 	return $todoListItem;
 }
@@ -77,7 +88,7 @@ var main = function (toDoObjects) {
 	var tabs = [];
 	// добавляем вкладку Новые
 	tabs.push({
-		"name": "Новые",
+		"name": "Мои квитанции",
 		// создаем функцию content
 		// так, что она принимает обратный вызов
 		"content": function(callback) {
@@ -96,19 +107,20 @@ var main = function (toDoObjects) {
 		}
 	});
 
-	// добавляем вкладку Старые
+	// добавляем вкладку Неоплаченные
 	tabs.push({
-		"name": "Старые",
+		"name": "Неоплаченные",
 		"content": function(callback) {
 			$.getJSON("todos.json", function (toDoObjects) {
-				var $content,
-					i;
+				var $content, i;
 				$content = $("<ul>");
 				for (i = 0; i < toDoObjects.length; i++) {
-					var $todoListItem = liaWithEditOrDeleteOnClick(toDoObjects[i], function() {
-						$(".tabs a:nth-child(2) span").trigger("click");
-					});
-					$content.append($todoListItem);
+					if (toDoObjects[i].status === 'Не оплачено') {
+						var $todoListItem = liaWithEditOrDeleteOnClick(toDoObjects[i], function() {
+							$(".tabs a:nth-child(2) span").trigger("click");
+						});
+						$content.append($todoListItem);
+					}
 				}
 				callback(null, $content);
 			}).fail(function(jqXHR, textStatus, error) {
@@ -117,62 +129,46 @@ var main = function (toDoObjects) {
 		}
 	});
 
-	// добавляем вкладку Теги
-	tabs.push({
-		"name": "Теги",
-		"content":function (callback) {
-			$.get("todos.json", function (toDoObjects) {	
-				// создание $content для Теги 
-				var organizedByTag = organizeByTags(toDoObjects),
-					$content;
-				organizedByTag.forEach(function (tag) {
-					var $tagName = $("<h3>").text(tag.name);
-						$content = $("<ul>");
-					tag.toDos.forEach(function (description) {
-						var $li = $("<li>").text(description);
-						$content.append($li);
-					});
-					$("main .content").append($tagName);
-					$("main .content").append($content);
-				});
-				callback(null,$content);
-			}).fail(function (jqXHR, textStatus, error) {
-				// в этом случае мы отправляем ошибку вместе с null для $content
-				callback(error, null);
-			});
-		}
-	});
-
 	// создаем вкладку Добавить
 	tabs.push({
+
 		"name": "Добавить",
 		"content":function () {
 			$.get("todos.json", function (toDoObjects) {	
 				// создание $content для Добавить 
-				var $textInput = $("<h3>").text("Введите новую задачу: "),
+				var $place = $("<h3>").text("Введите новерок на стоянке: "),
 					$input = $("<input>").addClass("description"), 
-					$textTag = $("<h3>").text("Тэги: "),
-					$tagInput = $("<input>").addClass("tags"),
 					$button = $("<button>").text("Добавить"),
-					$content1 = $("<ul>"), $content2 = $("<ul>");
+					$content1 = $("<ul>");
 
 				$content1.append($input);
-				$content2.append($tagInput);
-
-				$("main .content").append($textInput);
+				$("main .content").append($place);
 				$("main .content").append($content1);
-				$("main .content").append($textTag);
-				$("main .content").append($content2);
 				$("main .content").append($button); 
 				
 				function btnfunc() {
-					var description = $input.val(),
-						tags = $tagInput.val().split(","),
+
+					function checkTime(i) {
+						if (i<10) {
+							i="0" + i;
+						}
+						return i;
+					}
+					var Data = new Date(),
+						Year = Data.getFullYear(), Month = Data.getMonth(), Day = Data.getDate(),
+						Hour = checkTime(Data.getHours()), Minutes = checkTime(Data.getMinutes());
+
+					var data = (Day+"."+Month+"."+Year+" "+Hour+":"+Minutes);
+					// Вывод
+					console.log(data);
+
+					var description = ('№' + $input.val() + ' (' + data + ') '),
 						// создаем новый элемент списка задач
-						newToDo = {"description":description, "tags":tags};
+						newToDo = {"description":description, "status": 'Не оплачено'};
+					
+
 					$.post("todos", newToDo, function(result) {
 						$input.val("");
-						$tagInput.val("");
 						$(".tabs a:first-child span").trigger("click");
 					});
 				}

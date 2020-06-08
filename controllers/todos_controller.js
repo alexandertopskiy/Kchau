@@ -32,10 +32,12 @@ ToDosController.index = function (req, res) {
 };
 
 ToDosController.create = function (req, res) {
+	console.log("Вызван ToDosController.create");
 	var username = req.params.username || null;
 	var newToDo = new ToDo({
 		"description": req.body.description,
-		"tags": req.body.tags
+		"tags": req.body.tags,
+		"status" : req.body.status
 	});
 
 	console.log("username: " + username);
@@ -64,6 +66,7 @@ ToDosController.create = function (req, res) {
 };
 
 ToDosController.show = function (req, res) {
+	console.log("Вызван ToDosController.show");
 	// это ID, который мы отправляем через URL
 	var id = req.params.id;
 	// находим элемент списка задач с соответствующим ID 
@@ -84,6 +87,7 @@ ToDosController.show = function (req, res) {
 };
 
 ToDosController.destroy = function (req, res) {
+	console.log("Вызван ToDosController.destroy");
 	var id = req.params.id;
 	ToDo.deleteOne({"_id": id}, function (err, todo) {
 		if (err !== null) {
@@ -99,8 +103,10 @@ ToDosController.destroy = function (req, res) {
 }
 
 ToDosController.update = function (req, res) {
+	console.log("Вызван ToDosController.update");
 	var id = req.params.id;
-	var newDescription = {$set: {description: req.body.description}};
+	var newDescription = {$set: {description: req.body.description, status: req.body.status}};
+	// var newStatus = {$set: {status: req.body.status}};
 	ToDo.updateOne({"_id": id}, newDescription, function (err,todo) {
 		if (err !== null) {
 			res.status(500).json(err);
@@ -112,6 +118,7 @@ ToDosController.update = function (req, res) {
 			}
 		}
 	});
+
 }
 
 module.exports = ToDosController;
