@@ -1,5 +1,5 @@
 var User = require("../models/user.js"), 
-    ToDo = require("../models/todo.js"),
+    ToDo = require("../models/receipt.js"),
 	UsersController = {},
 	mongoose = require("mongoose");
  

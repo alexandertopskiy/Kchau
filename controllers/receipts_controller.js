@@ -1,17 +1,17 @@
-var ToDo = require("../models/todo.js"),
+var Receipt = require("../models/receipt.js"),
 	User = require("../models/user.js"),
-	ToDosController = {};
+	ReceiptController = {};
 
-ToDosController.index = function (req, res) { 
-	console.log("Вызван ToDosController.index");
+ReceiptController.index = function (req, res) { 
+	console.log("Вызван ReceiptController.index");
 	var username = req.params.username || null,
-		respondWithToDos;
-	respondWithToDos = function (query) { 
-		ToDo.find(query, function (err, toDos) {
+		respondWithReceipt;
+	respondWithReceipt = function (query) { 
+		Receipt.find(query, function (err, Receipts) {
 			if (err !== null) {
 				res.json(500, err);
 			} else {
-				res.status(200).json(toDos);
+				res.status(200).json(Receipts);
 			}
 		});
 	};
@@ -23,20 +23,19 @@ ToDosController.index = function (req, res) {
 			} else if (result.length === 0) {
 				res.status(404).json({"result_length": 0});
 			} else {
-				respondWithToDos({"owner": result[0]._id});
+				respondWithReceipt({"owner": result[0]._id});
 			}
 		});
 	} else {
-		respondWithToDos({});
+		respondWithReceipt({});
 	}
 };
 
-ToDosController.create = function (req, res) {
-	console.log("Вызван ToDosController.create");
+ReceiptController.create = function (req, res) {
+	console.log("Вызван ReceiptController.create");
 	var username = req.params.username || null;
-	var newToDo = new ToDo({
+	var newReceipt = new Receipt({
 		"description": req.body.description,
-		"tags": req.body.tags,
 		"status" : req.body.status
 	});
 
@@ -47,11 +46,11 @@ ToDosController.create = function (req, res) {
 			res.send(500);
 		} else {
 			if (result.length === 0) {
-				newToDo.owner = null;
+				newReceipt.owner = null;
 			} else {
-				newToDo.owner = result[0]._id;
+				newReceipt.owner = result[0]._id;
 			}
-			newToDo.save(function (err, result) {
+			newReceipt.save(function (err, result) {
 				console.log(result);
 				if (err !== null) {
 					// элемент не был сохранен!
@@ -65,19 +64,19 @@ ToDosController.create = function (req, res) {
 	});
 };
 
-ToDosController.show = function (req, res) {
-	console.log("Вызван ToDosController.show");
+ReceiptController.show = function (req, res) {
+	console.log("Вызван ReceiptController.show");
 	// это ID, который мы отправляем через URL
 	var id = req.params.id;
 	// находим элемент списка задач с соответствующим ID 
-	ToDo.find({"_id":id}, function (err, todo) {
+	Receipt.find({"_id":id}, function (err, Receipt) {
 		if (err !== null) {
 			// возвращаем внутреннюю серверную ошибку 
 			res.status(500).json(err);
 		} else {
-			if (todo.length > 0) {
+			if (Receipt.length > 0) {
 				// возвращаем успех!
-				res.status(200).json(todo[0]);
+				res.status(200).json(Receipt[0]);
 			} else {
 				// мы не нашли элемент списка задач с этим ID! 
 				res.send(404);
@@ -86,15 +85,15 @@ ToDosController.show = function (req, res) {
 	});
 };
 
-ToDosController.destroy = function (req, res) {
-	console.log("Вызван ToDosController.destroy");
+ReceiptController.destroy = function (req, res) {
+	console.log("Вызван ReceiptController.destroy");
 	var id = req.params.id;
-	ToDo.deleteOne({"_id": id}, function (err, todo) {
+	Receipt.deleteOne({"_id": id}, function (err, Receipt) {
 		if (err !== null) {
 			res.status(500).json(err);
 		} else {
-			if (todo.n === 1 && todo.ok === 1 && todo.deletedCount === 1) {
-				res.status(200).json(todo);
+			if (Receipt.n === 1 && Receipt.ok === 1 && Receipt.deletedCount === 1) {
+				res.status(200).json(Receipt);
 			} else {
 				res.status(404).json({"status": 404});
 			}
@@ -102,17 +101,17 @@ ToDosController.destroy = function (req, res) {
 	});
 }
 
-ToDosController.update = function (req, res) {
-	console.log("Вызван ToDosController.update");
+ReceiptController.update = function (req, res) {
+	console.log("Вызван ReceiptController.update");
 	var id = req.params.id;
 	var newDescription = {$set: {description: req.body.description, status: req.body.status}};
 	// var newStatus = {$set: {status: req.body.status}};
-	ToDo.updateOne({"_id": id}, newDescription, function (err,todo) {
+	Receipt.updateOne({"_id": id}, newDescription, function (err,Receipt) {
 		if (err !== null) {
 			res.status(500).json(err);
 		} else {
-			if (todo.n === 1 && todo.nModified === 1 && todo.ok === 1) {
-				res.status(200).json(todo);
+			if (Receipt.n === 1 && Receipt.nModified === 1 && Receipt.ok === 1) {
+				res.status(200).json(Receipt);
 			} else {
 				res.status(404).json({"status": 404});
 			}
@@ -121,4 +120,4 @@ ToDosController.update = function (req, res) {
 
 }
 
-module.exports = ToDosController;
+module.exports = ReceiptController;

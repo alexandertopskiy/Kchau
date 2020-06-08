@@ -4,26 +4,6 @@ body {
 	font-size: 100%;
 }
 
-header img {
-	float: left;
-	margin: 0 auto;
-	height: 100%;
-}
-
-.title{
-	font-family: Magneto_RUS_A;
-	text-decoration: none;
-	/*float: ri;*/
-	width: 100%;
-	font-size: 500%;
-	font-style: italic;
-	color: black;
-}
-.title:hover {
-	color: red;
-	text-decoration: none;
-}
-
 a {
 	text-decoration: none;
 	color: black;
@@ -33,58 +13,12 @@ a:hover {
 	color: red;
 }
 
-h1, h2, h3, h4 {
-	font-size: 120%;
-}
-
-header, main, footer { 
-	min-width: 855px;
-}
-
 header .container, aside .container, main .container, footer .container { 
 	max-width: 1200px;
 	margin: auto;
 }
 
-main .authorization {
-	max-width: 1200px;
-	background: #ddd; 
-	/*padding-top: 10px; */
-	margin: auto;
-	border-radius: 5px;
-	/*border-radius: 5px 5px 0 0; */
-}
-
-main .authorization p {
-	padding: 15px; 	
-	padding-bottom: 0px;
-	/*padding-left: 15px;*/
-	font-size:20px;
-	color: red;
-}
-
-main .authorization input {
-	font-family: Ubuntu;
-	margin: 10px; 
-	font-size:18px;
-	padding: 5px;
-	padding-right : 60px;
-	border: 2px solid black;
-	border-radius: 8px;
-}
-
-main .authorization button {
-	font-family: Ubuntu;
-	top: 50px;
-	left: 50px;  /*расстояние от края*/
-    font-size: 18px;
-    border-radius: 8px;
-    border: 2px solid black;
-    padding: 5px;
-    margin: 10px; 
-	text-align: center; 
-	float : right;
-}
+header, main, footer {  min-width: 855px; }
 
 header { 
 	background: white; 
@@ -96,17 +30,59 @@ header nav {
 	float: right;
 	padding-top: 15px;
 }
-aside {
-	background: white;
-	overflow: auto;
-	padding: 20px;
-	margin-bottom: 3px;
+header img {
+	float: left;
+	margin: 0 auto;
+	height: 100%;
+}
+header .title{
+	font-family: Magneto_RUS_A;
+	text-decoration: none;
+	width: 100%;
+	font-size: 500%;
+	font-style: italic;
+	color: black;
+}
+header .title:hover {
+	color: red;
+	text-decoration: none;
 }
 
 main { 
 	background: white; 
 	overflow: auto;
 	padding: 20px;
+}
+main .authorization {
+	max-width: 1200px;
+	background: #ddd; 
+	margin: auto;
+	border-radius: 5px;
+}
+main .authorization p {
+	padding: 15px; 	
+	padding-bottom: 0px;
+	font-size:20px;
+}
+main .authorization input {
+	font-family: Ubuntu;
+	margin: 10px; 
+	font-size:18px;
+	padding: 5px;
+	padding-right : 60px;
+	border: 2px solid black;
+	border-radius: 8px;
+}
+main .authorization button {
+	font-family: Ubuntu;
+	top: 50px; left: 50px;  /*расстояние от края*/
+    font-size: 18px;
+    border-radius: 8px;
+    border: 2px solid black;
+    padding: 5px;
+    margin: 10px; 
+	text-align: center; 
+	float : right;
 }
 main .main_block {
 	float: left;
@@ -116,54 +92,7 @@ main .image {
 	float: right;	
 	width: 285px;
 }
-main .faq {
-	float: left;
-}
-main .faq p {
-	margin-top: 5px;
-	margin-bottom: 5px;
-}
-main h2 {
-	font-size: 120%;
-	margin-top: 10px;
-	margin-bottom: 10px;
-}
-main h3 {
-	margin-top: 10px;
-	margin-bottom: 5px;	
-}
-
-ul{
-	list-style: circle;
-	list-style-position: inside;
-}
-
-footer {
-	overflow: auto;
-	padding: 10px;
-	font-size: 18px;
-	color: white;
-	color: #f9bf29;
-}
-.contact {
-	float: right;
-	text-align: right;
-	width: 570px;
-	padding-top: 15px;
-}
-.sitemap {
-	float: right;	
-	padding-top: 15px;
-	width: 285px;
-}
-footer a {
-	color: #f9bf29;
-}
-footer a:hover {
-	color: white;
-}
-
-.tabs a span {
+main .tabs a span {
 	display: inline-block; 
 	border-radius: 5px 5px 0 0; 
 	width: 150px; 
@@ -173,8 +102,20 @@ footer a:hover {
 	background: #ccc; 
 	padding: 10px;
 }
-.tabs a span.active { 
-	background: #ddd; 
+main .tabs a span.active { background: #ddd; }
+
+footer {
+	overflow: auto;
+	padding: 10px;
+	font-size: 18px;
+	color: white;
+	color: #f9bf29;
+}
+footer .contact {
+	float: right;
+	text-align: right;
+	width: 570px;
+	padding-top: 15px;
 }
 
 .content {
@@ -205,6 +146,7 @@ footer a:hover {
 }
 .content h3 {
 	margin: 10px;
+	font-size: 20px;
 }
 .content button {
 	font-family: Ubuntu;
@@ -220,20 +162,21 @@ footer a:hover {
 .linkEdit {
 	display: inline-block;
 	float: right;
-	padding-left: 15px; 
+	vertical-align: center;
 }
 .linkEdit:hover {
-	background: red;
+	padding: 0px;
+	background: #f9bc2a;
 	color: white;
 	text-decoration: none;
 } 
 .linkRemove {
 	display: inline-block;
 	float: right;
-	padding-left: 15px; 
+	vertical-align: center;
 }
 .linkRemove:hover {
-	background: red;
+	background: #ea5f55;
 	color: white;
 	text-decoration: none;
 } 

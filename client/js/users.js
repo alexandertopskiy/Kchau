@@ -1,6 +1,6 @@
 var main = function (UsersObjects) {
 	"use strict";
-	var $input = $("<input>").addClass("username"),
+	var $input = $("<input placeholder='а000аа777'>").addClass("username"),
 		$butRegister = $("<button>").text("Зарегистрироваться в системе"),
 		$butLogin = $("<button>").text("Войти"),
 		$butEdit = $("<button>").text(" Поменять номер"),
@@ -13,7 +13,6 @@ var main = function (UsersObjects) {
 		console.log(username);
 		var check = example.test(username); // false
 		console.log(check);
-
 
 		if (check) {
 			if (username !== null && username.trim() !== "") {
@@ -29,8 +28,7 @@ var main = function (UsersObjects) {
 				}).fail(function(jqXHR, textStatus, error) {
 					console.log(error);
 					if (jqXHR.status === 501) {
-						alert("Такой пользователь уже существует!\nИзмените логин и повторите "
-							+ "попытку");
+						alert("Такой номер уже зарегистрирован в системе!\nВведите другой номер ");
 					} else {					
 						alert("Произошла ошибка!\n"+jqXHR.status + " " + jqXHR.textStatus);	
 					}
@@ -63,7 +61,7 @@ var main = function (UsersObjects) {
 		if ($input.val() !== "") {
 			if ($input.val() !== null && $input.val().trim() !== "") {
 				var username = $input.val();
-				var newUsername = prompt("Введите новое имя пользователя", $input.val());
+				var newUsername = prompt("Введите новый гос.номер, который будет закреплен за Вашим профилем", $input.val());
 				if (newUsername !== null && newUsername.trim() !== "") {
 					$.ajax({
 						'url': '/users/'+username,
@@ -72,7 +70,7 @@ var main = function (UsersObjects) {
 					}).done(function(responde) {
 						console.log(responde);
 						$input.val(newUsername);
-						alert('Имя пользователя успешно изменено');
+						alert('Ваш гос.номер успешно изменен');
 					}).fail(function(jqXHR, textStatus, error) {
 						console.log(error);
 						alert("Произошла ошибка!\n"+jqXHR.status + " " + jqXHR.textStatus);	
@@ -86,14 +84,14 @@ var main = function (UsersObjects) {
 		if ($input.val() !== "") {
 			if ($input.val() !== null && $input.val().trim() !== "") {
 				var username = $input.val();
-				if (confirm("Вы уверены, что хотете удалить пользователя " + username + "?")) {
+				if (confirm("Вы уверены, что хотете удалить профиль " + username + "?")) {
 					$.ajax({
 						'url': '/users/'+username,
 						'type': 'DELETE',
 					}).done(function(responde) {
 						console.log(responde);
 						$input.val("");
-						alert('Пользователь успешно удален');
+						alert('Ваш профиль успешно удален');
 					}).fail(function(jqXHR, textStatus, error) {
 						console.log(error);
 						alert("Произошла ошибка!\n"+jqXHR.status + " " + jqXHR.textStatus);	
