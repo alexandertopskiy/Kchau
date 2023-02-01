@@ -15,27 +15,18 @@ var main = function (UsersObjects) {
         var check = example.test(username);
 
         if (check) {
-            if (username !== null && username.trim() !== '') {
-                var newUser = { 'username': username };
-                $.post('users', newUser, function (result) {
-                    console.log(result);
-                    // отправляем на клиент
-                    UsersObjects.push(newUser);
+            var newUser = { 'username': username };
+            $.post('users', newUser, () => {
+                UsersObjects.push(newUser); // отправляем на клиент
+            })
+                .done(() => {
+                    alert('Аккаунт успешно создан!');
+                    $butLogin.trigger('click');
                 })
-                    .done(function (responde) {
-                        console.log(responde);
-                        alert('Аккаунт успешно создан!');
-                        $butLogin.trigger('click');
-                    })
-                    .fail(function (jqXHR, textStatus, error) {
-                        console.log(error);
-                        if (jqXHR.status === 501) {
-                            alert('Такой номер уже зарегистрирован в системе!\nВведите другой номер ');
-                        } else {
-                            alert('Произошла ошибка!\n' + jqXHR.status + ' ' + jqXHR.textStatus);
-                        }
-                    });
-            }
+                .fail(function (jqXHR) {
+                    if (jqXHR.status === 501) alert('Такой номер уже зарегистрирован!\nВведите другой номер ');
+                    else alert('Произошла ошибка! Повторите попытку позже!');
+                });
         } else {
             alert('Введенные данные не соответствуют формату гос.номера РФ!\nПовторите ввод');
             $input.val('');
