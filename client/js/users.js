@@ -1,6 +1,7 @@
 var main = function (UsersObjects) {
     'use strict';
-    var $input = $("<input placeholder='а000аа777'>").addClass('username'),
+
+    var $input = $("<input placeholder='а777аа777'>").addClass('username'),
         $butRegister = $('<button>').text('Зарегистрироваться в системе'),
         $butLogin = $('<button>').text('Войти'),
         $butEdit = $('<button>').text(' Поменять номер'),
@@ -9,10 +10,9 @@ var main = function (UsersObjects) {
     $butRegister.on('click', function () {
         var username = $input.val();
 
+        // регулярное выражение для валидации гос.номера
         var example = /^[АВЕКМНОРСТУХ]\d{3}(?<!000)[АВЕКМНОРСТУХ]{2}\d{2,3}$/iu;
-        console.log(username);
-        var check = example.test(username); // false
-        console.log(check);
+        var check = example.test(username);
 
         if (check) {
             if (username !== null && username.trim() !== '') {
