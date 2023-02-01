@@ -35,18 +35,19 @@ var main = function (UsersObjects) {
 
     $butLogin.on('click', function () {
         var username = $input.val();
+
         if (username !== null && username.trim() !== '') {
-            var loginUser = { 'username': username };
             $.ajax({
                 'url': '/users/' + username,
                 'type': 'GET'
             })
-                .done(function (responde) {
+                .done(() => {
+                    // переход на страницу пользователя
                     window.location.replace('users/' + username + '/');
                 })
-                .fail(function (jqXHR, textStatus, error) {
-                    console.log(error);
-                    alert('Произошла ошибка!\n' + jqXHR.status + ' ' + jqXHR.textStatus);
+                .fail(function (jqXHR) {
+                    if (jqXHR.status === 404) alert('Пользователя не существует!');
+                    else alert('Произошла ошибка! Повторите попытку позже!');
                 });
         }
     });
