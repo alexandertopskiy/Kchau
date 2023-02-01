@@ -1,7 +1,6 @@
 var mongoose = require('mongoose'),
     ObjectId = mongoose.Schema.Types.ObjectId;
 
-// Это модель mongoose для списка задач
 var ReceiptSchema = mongoose.Schema({
     description: String,
     status: String,
@@ -9,4 +8,5 @@ var ReceiptSchema = mongoose.Schema({
 });
 
 var Receipt = mongoose.model('Receipt', ReceiptSchema);
+
 module.exports = Receipt;

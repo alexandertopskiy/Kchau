@@ -2,6 +2,7 @@ var Receipt = require('../models/receipt.js'),
     User = require('../models/user.js'),
     ReceiptController = {};
 
+// Индексация (проверка существования) пользователя
 ReceiptController.index = function (req, res) {
     console.log('Вызван ReceiptController.index');
     var username = req.params.username || null,
@@ -31,6 +32,29 @@ ReceiptController.index = function (req, res) {
     }
 };
 
+// Отобразить пользователя
+ReceiptController.show = function (req, res) {
+    console.log('Вызван ReceiptController.show');
+    // это ID, который мы отправляем через URL
+    var id = req.params.id;
+    // находим элемент списка задач с соответствующим ID
+    Receipt.find({ '_id': id }, function (err, Receipt) {
+        if (err !== null) {
+            // возвращаем внутреннюю серверную ошибку
+            res.status(500).json(err);
+        } else {
+            if (Receipt.length > 0) {
+                // возвращаем успех!
+                res.status(200).json(Receipt[0]);
+            } else {
+                // мы не нашли элемент списка задач с этим ID!
+                res.send(404);
+            }
+        }
+    });
+};
+
+// Создать нового пользователя
 ReceiptController.create = function (req, res) {
     console.log('Вызван ReceiptController.create');
     var username = req.params.username || null;
@@ -64,43 +88,7 @@ ReceiptController.create = function (req, res) {
     });
 };
 
-ReceiptController.show = function (req, res) {
-    console.log('Вызван ReceiptController.show');
-    // это ID, который мы отправляем через URL
-    var id = req.params.id;
-    // находим элемент списка задач с соответствующим ID
-    Receipt.find({ '_id': id }, function (err, Receipt) {
-        if (err !== null) {
-            // возвращаем внутреннюю серверную ошибку
-            res.status(500).json(err);
-        } else {
-            if (Receipt.length > 0) {
-                // возвращаем успех!
-                res.status(200).json(Receipt[0]);
-            } else {
-                // мы не нашли элемент списка задач с этим ID!
-                res.send(404);
-            }
-        }
-    });
-};
-
-ReceiptController.destroy = function (req, res) {
-    console.log('Вызван ReceiptController.destroy');
-    var id = req.params.id;
-    Receipt.deleteOne({ '_id': id }, function (err, Receipt) {
-        if (err !== null) {
-            res.status(500).json(err);
-        } else {
-            if (Receipt.n === 1 && Receipt.ok === 1 && Receipt.deletedCount === 1) {
-                res.status(200).json(Receipt);
-            } else {
-                res.status(404).json({ 'status': 404 });
-            }
-        }
-    });
-};
-
+// Обновить существующего пользователя
 ReceiptController.update = function (req, res) {
     console.log('Вызван ReceiptController.update');
     var id = req.params.id;
@@ -111,6 +99,23 @@ ReceiptController.update = function (req, res) {
             res.status(500).json(err);
         } else {
             if (Receipt.n === 1 && Receipt.nModified === 1 && Receipt.ok === 1) {
+                res.status(200).json(Receipt);
+            } else {
+                res.status(404).json({ 'status': 404 });
+            }
+        }
+    });
+};
+
+// Удалить существующего пользователя
+ReceiptController.destroy = function (req, res) {
+    console.log('Вызван ReceiptController.destroy');
+    var id = req.params.id;
+    Receipt.deleteOne({ '_id': id }, function (err, Receipt) {
+        if (err !== null) {
+            res.status(500).json(err);
+        } else {
+            if (Receipt.n === 1 && Receipt.ok === 1 && Receipt.deletedCount === 1) {
                 res.status(200).json(Receipt);
             } else {
                 res.status(404).json({ 'status': 404 });

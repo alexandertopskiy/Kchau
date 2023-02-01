@@ -1,8 +1,8 @@
 var User = require('../models/user.js'),
     ToDo = require('../models/receipt.js'),
-    UsersController = {},
-    mongoose = require('mongoose');
+    UsersController = {};
 
+// Индексация (проверка существования) пользователя
 UsersController.index = function (req, res) {
     console.log('Вызвано действие: UsersController.index');
     User.find(function (err, users) {
@@ -32,7 +32,8 @@ UsersController.show = function (req, res) {
 UsersController.create = function (req, res) {
     console.log('Вызвано действие: создать пользователя');
     var username = req.body.username;
-    // console.log(username);
+    console.log(username);
+
     User.find({ 'username': username }, function (err, result) {
         if (err) {
             console.log(err);
