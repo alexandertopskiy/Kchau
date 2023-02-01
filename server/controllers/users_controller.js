@@ -2,6 +2,7 @@ var User = require('../models/user.js'),
     ToDo = require('../models/receipt.js'),
     UsersController = {};
 
+// Индексация (проверка существования) пользователя
 UsersController.index = function (req, res) {
     console.log('Вызвано действие: UsersController.index');
     User.find(function (err, users) {
