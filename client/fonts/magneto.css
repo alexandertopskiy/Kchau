@@ -1,4 +1,6 @@
 @font-face {
-	font-family: Magneto_RUS_A; /* Имя шрифта */
-	src: url(magneto_RUS_A.otf); /* Путь к файлу со шрифтом */
-} 
+	/* Имя шрифта */
+	font-family: Magneto_RUS_A;
+	/* Путь к файлу со шрифтом */
+	src: url(magneto_RUS_A.otf);
+}
