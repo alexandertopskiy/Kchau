@@ -1,6 +1,12 @@
 var main = function (UsersObjects) {
     'use strict';
 
+    // валидация гос.номера
+    const validateLicensePlate = plate => {
+        const example = /^[АВЕКМНОРСТУХ]\d{3}(?<!000)[АВЕКМНОРСТУХ]{2}\d{2,3}$/iu;
+        return example.test(plate);
+    };
+
     var $input = $("<input placeholder='а777аа777'>").addClass('username'),
         $butRegister = $('<button>').text('Зарегистрироваться в системе'),
         $butLogin = $('<button>').text('Войти'),
@@ -10,11 +16,7 @@ var main = function (UsersObjects) {
     $butRegister.on('click', function () {
         var username = $input.val();
 
-        // регулярное выражение для валидации гос.номера
-        var example = /^[АВЕКМНОРСТУХ]\d{3}(?<!000)[АВЕКМНОРСТУХ]{2}\d{2,3}$/iu;
-        var check = example.test(username);
-
-        if (check) {
+        if (validateLicensePlate(username)) {
             var newUser = { 'username': username };
             $.post('users', newUser, () => {
                 UsersObjects.push(newUser); // отправляем на клиент
