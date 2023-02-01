@@ -55,31 +55,33 @@ var main = function (UsersObjects) {
     });
 
     $butEdit.on('click', function () {
-        if ($input.val() !== '') {
-            if ($input.val() !== null && $input.val().trim() !== '') {
-                var username = $input.val();
-                var newUsername = prompt(
-                    'Введите новый гос.номер, который будет закреплен за Вашим профилем',
-                    $input.val()
-                );
-                if (newUsername !== null && newUsername.trim() !== '') {
-                    $.ajax({
-                        'url': '/users/' + username,
-                        'type': 'PUT',
-                        'data': { 'username': newUsername }
-                    })
-                        .done(function (responde) {
-                            console.log(responde);
-                            $input.val(newUsername);
-                            alert('Ваш гос.номер успешно изменен');
-                        })
-                        .fail(function (jqXHR, textStatus, error) {
-                            console.log(error);
-                            alert('Произошла ошибка!\n' + jqXHR.status + ' ' + jqXHR.textStatus);
-                        });
-                }
-            }
+        var username = $input.val();
+        if (username === null || username.trim() === '') {
+            alert('Сначала введите номер');
+            return;
         }
+
+        var newUsername = prompt('Введите новый гос.номер, который будет закреплен за Вашим профилем', $input.val());
+        if (newUsername === null || newUsername === username) return;
+        if (!validateLicensePlate(newUsername)) {
+            alert('Введенные данные не соответствуют формату гос.номера РФ!\nПовторите ввод');
+            return;
+        }
+
+        $.ajax({
+            'url': '/users/' + username,
+            'type': 'PUT',
+            'data': { 'username': newUsername }
+        })
+            .done(() => {
+                alert('Ваш гос.номер успешно изменен');
+                $input.val(newUsername);
+            })
+            .fail(function (jqXHR) {
+                if (jqXHR.status === 404) alert('Пользователя не существует!');
+                else if (jqXHR.status === 501) alert('Пользователь с таким номером уже существует!');
+                else alert('Произошла ошибка! Повторите попытку позже!');
+            });
     });
 
     $butDestroy.on('click', function () {
