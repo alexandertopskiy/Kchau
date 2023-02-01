@@ -89,14 +89,13 @@ var main = function (UsersObjects) {
                         'url': '/users/' + username,
                         'type': 'DELETE'
                     })
-                        .done(function (responde) {
-                            console.log(responde);
+                        .done(() => {
                             $input.val('');
                             alert('Ваш профиль успешно удален');
                         })
-                        .fail(function (jqXHR, textStatus, error) {
-                            console.log(error);
-                            alert('Произошла ошибка!\n' + jqXHR.status + ' ' + jqXHR.textStatus);
+                        .fail(function (jqXHR) {
+                            if (jqXHR.status === 404) alert('Пользователя не существует!');
+                            else alert('Произошла ошибка! Повторите попытку позже!');
                         });
                 }
             }
