@@ -28,6 +28,8 @@ footer {
 	min-width: 855px;
 }
 
+/* Header */
+
 header {
 	background: white;
 	overflow: auto;
@@ -60,6 +62,8 @@ header .title:hover {
 	text-decoration: none;
 }
 
+/* Main */
+
 main {
 	background: white;
 	overflow: auto;
@@ -89,18 +93,33 @@ main .authorization input {
 	border-radius: 8px;
 }
 
+main .authorization input:focus {
+	outline: none;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+}
+
 main .authorization button {
 	font-family: Ubuntu;
+	/*расстояние от края*/
 	top: 50px;
 	left: 50px;
-	/*расстояние от края*/
+	cursor: pointer;
 	font-size: 18px;
 	border-radius: 8px;
 	border: 2px solid black;
-	padding: 5px;
+	padding: 5px 10px;
 	margin: 10px;
 	text-align: center;
 	float: right;
+}
+
+main .authorization button:hover,
+main .authorization button:active {
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+}
+
+main .authorization button:active {
+	color: rgba(0, 0, 0, 0.26);
 }
 
 main .main_block {
@@ -128,6 +147,8 @@ main .tabs a span.active {
 	background: #ddd;
 }
 
+/* Footer */
+
 footer {
 	overflow: auto;
 	padding: 10px;
@@ -142,6 +163,8 @@ footer .contact {
 	width: 570px;
 	padding-top: 15px;
 }
+
+/* Content */
 
 .content {
 	background: white;
@@ -188,6 +211,8 @@ footer .contact {
 	background: white;
 	box-shadow: 0 0 0 10px #ddd;
 }
+
+/* Links */
 
 .linkEdit {
 	display: inline-block;
