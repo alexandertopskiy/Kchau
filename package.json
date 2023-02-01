@@ -1,26 +1,13 @@
 {
-  "name": "Amazeriffic",
-  "version": "1.0.0",
-  "main": "server.js",
-  "dependencies": {
-    "express": "^4.17.1",
-    "mongoose": "^5.9.15"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/alexandertopskiy/practice6.git"
-  },
-  "bugs": {
-    "url": "https://github.com/alexandertopskiy/practice6/issues"
-  },
-  "homepage": "https://github.com/alexandertopskiy/practice6#readme",
-  "description": ""
+    "name": "web-kursach",
+    "version": "1.0.0",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node server.js"
+    },
+    "dependencies": {
+        "express": "^4.18.2",
+        "mongoose": "^6.9.0"
+    },
+    "devDependencies": {}
 }
