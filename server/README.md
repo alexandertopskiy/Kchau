@@ -64,7 +64,7 @@ sudo chown -R `id -un` /System/Volumes/Data/data/db
 sudo mongod --dbpath /System/Volumes/Data/data/db # запуск сервера mongodb (ctrl+c для выхода/завершения)
 
 # в другом окне терминала (при активном сервере)
-sudo mongod --dbpath /System/Volumes/Data/data/db # запуск консоли управления mongodb (для выхода написать 'quit')
+mongosh # запуск консоли управления mongodb (для выхода написать 'quit')
 ```
 
 3. Находясь в [директории сервера](./server/) запустить в терминале следующую команду:
@@ -83,8 +83,6 @@ node server.js
 -   `db.receipts.find().pretty()` - вывод всех объявлений
 
 Полный список команд доступен в [документации](https://www.mongodb.com/docs/mongodb-shell/run-commands/)
-
-<!-- TODO -->
 
 ## Описание
 
