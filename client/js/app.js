@@ -15,7 +15,7 @@ var liaWithEditOrDeleteOnClick = function (Receipt, callback) {
                 $.ajax({
                     'url': '/Receipts/' + Receipt._id,
                     'type': 'PUT',
-                    'data': { 'description': newDescription }
+                    'data': { 'description': newDescription, 'status': 'Оплачено' }
                 })
                     .done(() => {
                         Receipt.status = 'Оплачено';
