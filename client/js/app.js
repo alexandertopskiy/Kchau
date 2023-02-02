@@ -97,65 +97,61 @@ var main = function (ReceiptObjects) {
         }
     });
 
-    // создаем вкладку Добавить
+    // Вкладка "Добавить"
     tabs.push({
         'name': 'Добавить',
         'content': function () {
-            $.get('Receipts.json', function (ReceiptObjects) {
-                // создание $content для Добавить
-                var $place = $('<h3>').text('Введите новерок на стоянке: '),
-                    $input = $('<input>').addClass('description'),
-                    $button = $('<button>').text('Добавить'),
-                    $content1 = $('<ul>');
+            $.get('Receipts.json', () => {
+                const $inputTitle = $('<h3>').text('Введите новерок на стоянке: ');
+                const $input = $('<input>').addClass('description');
 
-                $content1.append($input);
-                $('main .content').append($place);
-                $('main .content').append($content1);
-                $('main .content').append($button);
+                const $checboxWrapper = $('<div>').addClass('checkbox-wrapper');
+                const $checkboxTitle = $('<p>').text('Уже оплачено?');
+                const $checkbox = $('<input type="checkbox">');
 
-                function btnfunc() {
-                    function checkTime(i) {
-                        if (i < 10) {
-                            i = '0' + i;
-                        }
-                        return i;
-                    }
-                    var Data = new Date(),
-                        Year = Data.getFullYear(),
-                        Month = checkTime(Data.getMonth()),
-                        Day = checkTime(Data.getDate()),
-                        Hour = checkTime(Data.getHours()),
-                        Minutes = checkTime(Data.getMinutes());
+                const $button = $('<button>').text('Добавить');
+                const $content = $('<ul>');
 
-                    var data = Day + '.' + Month + '.' + Year + ' ' + Hour + ':' + Minutes;
-                    // Вывод
-                    console.log(data);
+                $content.append($input);
 
-                    var description = '№' + $input.val() + ' (' + data + ') ',
-                        // создаем новый элемент списка задач
-                        newReceipt = { 'description': description, 'status': 'Не оплачено' };
+                $checboxWrapper.append($checkbox);
+                $checboxWrapper.append($checkboxTitle);
 
-                    $.post('Receipts', newReceipt, function (result) {
-                        $input.val('');
-                        $('.tabs a:first-child span').trigger('click');
-                    });
+                [$inputTitle, $content, $checboxWrapper, $button].forEach(el => $('main .content').append(el));
+
+                function btnCallback() {
+                    const checkTime = num => (num < 10 ? '0' + num : num);
+                    const nowDate = new Date();
+                    const year = nowDate.getFullYear();
+                    const month = checkTime(nowDate.getMonth());
+                    const day = checkTime(nowDate.getDate());
+                    const hour = checkTime(nowDate.getHours());
+                    const minutes = checkTime(nowDate.getMinutes());
+
+                    const fullDate = day + '.' + month + '.' + year + ' ' + hour + ':' + minutes;
+                    const description = '№' + $input.val() + ' (' + fullDate + ') ';
+
+                    const isPaid = $checkbox.is(':checked');
+                    const status = isPaid ? 'Оплачено' : 'Не оплачено';
+
+                    const newReceipt = { 'description': description, 'status': status };
+
+                    $.post('Receipts', newReceipt, () => $('.tabs a:first-child span').trigger('click'));
                 }
-                $button.on('click', function () {
-                    btnfunc();
-                });
-                $input.on('keydown', function (e) {
-                    if (e.which === 13) {
-                        btnfunc();
-                    }
+
+                $button.on('click', () => btnCallback());
+                // обработка нажатия "enter"
+                $input.on('keydown', e => {
+                    if (e.which === 13) btnCallback();
                 });
             });
         }
     });
 
+    // Вкладка "Выйти"
     tabs.push({
         'name': 'Выйти',
         'content': function () {
-            // $(".title").trigger("click");
             document.location.href = '/index.html';
         }
     });
