@@ -19,6 +19,7 @@ var liaWithEditOrDeleteOnClick = function (Receipt, callback) {
                 })
                     .done(() => {
                         Receipt.status = 'Оплачено';
+                        alert('Квитанция успешно оплачена');
                         callback();
                     })
                     .fail(jqXHR => {
@@ -39,6 +40,7 @@ var liaWithEditOrDeleteOnClick = function (Receipt, callback) {
             })
                 .done(() => {
                     callback();
+                    alert('Квитанция успешно удалена');
                 })
                 .fail(jqXHR => {
                     if (jqXHR.status === 404) alert('Такой квитанции не существует!');
