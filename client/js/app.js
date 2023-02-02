@@ -125,10 +125,10 @@ var main = function (ReceiptObjects) {
                     const minutes = checkTime(nowDate.getMinutes());
 
                     const fullDate = day + '.' + month + '.' + year + ' ' + hour + ':' + minutes;
-                    const description = '№' + $input.val() + ' (' + fullDate + ') ';
 
                     const isPaid = $checkbox.is(':checked');
                     const status = isPaid ? 'Оплачено' : 'Не оплачено';
+                    const description = '№' + $input.val() + ' (' + fullDate + ')' + (isPaid ? ' [Оплачено]' : '');
 
                     const newReceipt = { 'description': description, 'status': status };
 
