@@ -27,9 +27,7 @@ var main = function (UsersObjects) {
         }
 
         const newUser = { 'username': username };
-        $.post('users', newUser, () => {
-            UsersObjects.push(newUser); // отправляем на клиент
-        })
+        $.post('users', newUser, () => UsersObjects.push(newUser))
             .done(() => {
                 alert('Аккаунт успешно создан!');
                 $butLogin.trigger('click');

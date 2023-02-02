@@ -17,12 +17,13 @@ var liaWithEditOrDeleteOnClick = function (Receipt, callback) {
                     'type': 'PUT',
                     'data': { 'description': newDescription }
                 })
-                    .done(function (responde) {
+                    .done(() => {
                         Receipt.status = 'Оплачено';
                         callback();
                     })
-                    .fail(function (err) {
-                        console.log('Произошла ошибка: ' + err);
+                    .fail(jqXHR => {
+                        if (jqXHR.status === 404) alert('Такой квитанции не существует!');
+                        else alert('Произошла ошибка! Повторите попытку позже!');
                     });
             }
 
@@ -36,11 +37,12 @@ var liaWithEditOrDeleteOnClick = function (Receipt, callback) {
                 url: '/Receipts/' + Receipt._id,
                 type: 'DELETE'
             })
-                .done(function (responde) {
+                .done(() => {
                     callback();
                 })
-                .fail(function (err) {
-                    console.log("error on delete 'Receipt'!");
+                .fail(jqXHR => {
+                    if (jqXHR.status === 404) alert('Такой квитанции не существует!');
+                    else alert('Произошла ошибка! Повторите попытку позже!');
                 });
             return false;
         });
@@ -52,48 +54,40 @@ var liaWithEditOrDeleteOnClick = function (Receipt, callback) {
 
 var main = function (ReceiptObjects) {
     'use strict';
+
     // создание пустого массива с вкладками
     var tabs = [];
-    // добавляем вкладку Новые
+
+    // Вкладка "Новые"
     tabs.push({
         'name': 'Мои квитанции',
-        // создаем функцию content
-        // так, что она принимает обратный вызов
         'content': function (callback) {
             $.getJSON('Receipts.json', function (ReceiptObjects) {
                 var $content = $('<ul>');
                 for (var i = ReceiptObjects.length - 1; i >= 0; i--) {
-                    var $ReceiptListItem = liaWithEditOrDeleteOnClick(ReceiptObjects[i], function () {
-                        $('.tabs a:first-child span').trigger('click');
-                    });
+                    const clickCallback = () => $('.tabs a:first-child span').trigger('click');
+                    const $ReceiptListItem = liaWithEditOrDeleteOnClick(ReceiptObjects[i], clickCallback);
                     $content.append($ReceiptListItem);
                 }
                 callback(null, $content);
-            }).fail(function (jqXHR, textStatus, error) {
-                callback(error, null);
-            });
+            }).fail(jqXHR => callback(jqXHR.status, null));
         }
     });
 
-    // добавляем вкладку Неоплаченные
+    // Вкладка "Неоплаченные"
     tabs.push({
         'name': 'Неоплаченные',
         'content': function (callback) {
             $.getJSON('Receipts.json', function (ReceiptObjects) {
-                var $content, i;
-                $content = $('<ul>');
-                for (i = 0; i < ReceiptObjects.length; i++) {
-                    if (ReceiptObjects[i].status === 'Не оплачено') {
-                        var $ReceiptListItem = liaWithEditOrDeleteOnClick(ReceiptObjects[i], function () {
-                            $('.tabs a:nth-child(2) span').trigger('click');
-                        });
-                        $content.append($ReceiptListItem);
-                    }
+                const $content = $('<ul>');
+                for (let i = 0; i < ReceiptObjects.length; i++) {
+                    if (ReceiptObjects[i].status !== 'Не оплачено') continue;
+                    const clickCallback = () => $('.tabs a:nth-child(2) span').trigger('click');
+                    const $ReceiptListItem = liaWithEditOrDeleteOnClick(ReceiptObjects[i], clickCallback);
+                    $content.append($ReceiptListItem);
                 }
                 callback(null, $content);
-            }).fail(function (jqXHR, textStatus, error) {
-                callback(error, null);
-            });
+            }).fail(jqXHR => callback(jqXHR.status, null));
         }
     });
 
@@ -157,19 +151,19 @@ var main = function (ReceiptObjects) {
     });
 
     tabs.forEach(function (tab) {
-        var $aElement = $('<a>').attr('href', ''),
-            $spanElement = $('<span>').text(tab.name);
+        const $aElement = $('<a>').attr('href', '');
+        const $spanElement = $('<span>').text(tab.name);
+
         $aElement.append($spanElement);
         $('main .tabs').append($aElement);
 
         $spanElement.on('click', function () {
-            var $content;
             $('.tabs a span').removeClass('active');
             $spanElement.addClass('active');
             $('main .content').empty();
-            tab.content(function (err, $content) {
-                if (err !== null) {
-                    alert('Возникла проблема при обработке запроса: ' + err);
+            tab.content(function (errorStatus, $content) {
+                if (errorStatus !== null) {
+                    alert('Возникла проблема при обработке запроса: ' + errorStatus);
                 } else {
                     $('main .content').append($content);
                 }
