@@ -2,9 +2,9 @@ var Receipt = require('../models/receipt.js'),
     User = require('../models/user.js'),
     ReceiptController = {};
 
-// Индексация (проверка существования) пользователя
+// Индексация (проверка существования) квитанции
 ReceiptController.index = function (req, res) {
-    console.log('Вызван ReceiptController.index');
+    console.log('\nВызван ReceiptController.index');
     var username = req.params.username || null,
         respondWithReceipt;
     respondWithReceipt = function (query) {
@@ -32,9 +32,9 @@ ReceiptController.index = function (req, res) {
     }
 };
 
-// Отобразить пользователя
+// Отобразить квитанцию
 ReceiptController.show = function (req, res) {
-    console.log('Вызван ReceiptController.show');
+    console.log('\nВызван ReceiptController.show');
     // это ID, который мы отправляем через URL
     var id = req.params.id;
     // находим элемент списка задач с соответствующим ID
@@ -54,69 +54,65 @@ ReceiptController.show = function (req, res) {
     });
 };
 
-// Создать нового пользователя
+// Создать новую квитанцию
 ReceiptController.create = function (req, res) {
-    console.log('Вызван ReceiptController.create');
+    console.log('\nВызван ReceiptController.create');
     var username = req.params.username || null;
     var newReceipt = new Receipt({
         'description': req.body.description,
         'status': req.body.status
     });
-
     console.log('username: ' + username);
 
     User.find({ 'username': username }, function (err, result) {
-        if (err) {
-            res.send(500);
+        if (err !== null) {
+            console.log('error: ', err);
+            res.status(500).send(err);
         } else {
-            if (result.length === 0) {
-                newReceipt.owner = null;
-            } else {
-                newReceipt.owner = result[0]._id;
-            }
+            if (result.length === 0) newReceipt.owner = null;
+            else newReceipt.owner = result[0]._id;
+
             newReceipt.save(function (err, result) {
                 console.log(result);
                 if (err !== null) {
                     // элемент не был сохранен!
-                    console.log(err);
-                    res.json(500, err);
-                } else {
-                    res.status(200).json(result);
-                }
+                    console.log('error: ', err);
+                    res.status(500).send(err);
+                } else res.status(200).json(result);
             });
         }
     });
 };
 
-// Обновить существующего пользователя
+// Обновить существующую квитанцию
 ReceiptController.update = function (req, res) {
-    console.log('Вызван ReceiptController.update');
+    console.log('\nВызван ReceiptController.update');
     var id = req.params.id;
     var newDescription = { $set: { description: req.body.description, status: req.body.status } };
     // var newStatus = {$set: {status: req.body.status}};
-    Receipt.updateOne({ '_id': id }, newDescription, function (err, Receipt) {
+    Receipt.updateOne({ '_id': id }, newDescription, function (err, receipt) {
         if (err !== null) {
-            res.status(500).json(err);
+            console.log('error: ', err);
+            res.status(500).send(err);
         } else {
-            if (Receipt.n === 1 && Receipt.nModified === 1 && Receipt.ok === 1) {
-                res.status(200).json(Receipt);
-            } else {
-                res.status(404).json({ 'status': 404 });
-            }
+            if (receipt.acknowledged && receipt.modifiedCount === 1 && receipt.matchedCount === 1)
+                res.status(200).json(receipt);
+            else res.status(404).json({ 'status': 404 });
         }
     });
 };
 
-// Удалить существующего пользователя
+// Удалить существующую квитанцию
 ReceiptController.destroy = function (req, res) {
-    console.log('Вызван ReceiptController.destroy');
-    var id = req.params.id;
-    Receipt.deleteOne({ '_id': id }, function (err, Receipt) {
+    console.log('\nВызван ReceiptController.destroy');
+    const id = req.params.id;
+    Receipt.deleteOne({ '_id': id }, function (err, receipt) {
         if (err !== null) {
             res.status(500).json(err);
         } else {
-            if (Receipt.n === 1 && Receipt.ok === 1 && Receipt.deletedCount === 1) {
-                res.status(200).json(Receipt);
+            console.log(receipt);
+            if (receipt.acknowledged && receipt.deletedCount === 1) {
+                res.status(200).json(receipt);
             } else {
                 res.status(404).json({ 'status': 404 });
             }
