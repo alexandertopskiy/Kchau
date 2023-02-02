@@ -42,24 +42,63 @@ header nav {
 	padding-top: 15px;
 }
 
+header .logo {
+	position: relative;
+	display: inline-block;
+	height: 200px;
+}
+
+header .logo::after {
+	/* text */
+	content: "Кчау";
+	font-family: Magneto_RUS_A;
+	font-size: 3rem;
+	font-style: italic;
+	color: black;
+	text-shadow: -7px 5px 2px rgb(0 0 0 / 26%);
+	border-bottom: 2px solid transparent;
+	opacity: 0;
+
+	/* position and size */
+	position: absolute;
+	top: calc(50% - 1.5rem);
+	left: 0;
+	z-index: 1;
+	transform: translateX(50%);
+
+	/* transition */
+	transition: transform 1s, color 2s, border-color 1.5s ease-out, opacity 0.5s;
+	;
+}
+
+header .logo:hover::after {
+	color: red;
+	border-color: red;
+	opacity: 1;
+	transform: translateX(220%);
+}
+
 header img {
 	float: left;
 	margin: 0 auto;
 	height: 100%;
+	position: relative;
+	z-index: 100;
 }
 
 header .title {
 	font-family: Magneto_RUS_A;
 	text-decoration: none;
 	width: 100%;
-	font-size: 500%;
+	font-size: 5rem;
 	font-style: italic;
 	color: black;
 }
 
 header .title:hover {
-	color: red;
 	text-decoration: none;
+	color: red;
+	text-shadow: -7px 5px 2px rgb(0 0 0 / 26%);
 }
 
 /* Main */
