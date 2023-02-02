@@ -14,6 +14,7 @@ app.use('/user/:username', express.static(__dirname + '/../client'));
 app.use(express.urlencoded({ extended: true }));
 
 // Подключение к коллекции ParkingForMen в MongoDB
+mongoose.set('strictQuery', false);
 mongoose
     .connect('mongodb://localhost/ParkingForMen', {
         useNewUrlParser: true,
