@@ -27,6 +27,12 @@ sudo apt install -y mongodb
 sudo apt install net-tools
 ```
 
+### Установка зависимостей
+
+```
+npm install
+```
+
 ### Запуск сервера
 
 ```
@@ -50,6 +56,7 @@ ifconfig
 ## Запуск сервера локально
 
 1. Установить [Node.js](https://nodejs.org/en/)
+
 2. Установить [MongoDB](https://www.mongodb.com/docs/manual/administration/install-community/)  
    Для MacOS (на февраль 2023):
 
@@ -61,15 +68,20 @@ brew install mongodb-community
 sudo mkdir -p /System/Volumes/Data/data/db # mongodb data directory
 sudo chown -R `id -un` /System/Volumes/Data/data/db
 
+# НУЖНО ЗАПУСКАТЬ КАЖДЫЙ РАЗ ВМЕСТЕ С ПРИЛОЖЕНИЕМ!
 sudo mongod --dbpath /System/Volumes/Data/data/db # запуск сервера mongodb (ctrl+c для выхода/завершения)
 
 # в другом окне терминала (при активном сервере)
 mongosh # запуск консоли управления mongodb (для выхода написать 'quit')
 ```
 
-3. Находясь в [директории сервера](./server/) запустить в терминале следующую команду:
+3. Находясь в [директории сервера](./server/) запустить в терминале команды:
 
 ```bash
+npm install # установка всех зависимостей
+
+npm start
+# или
 node server.js
 ```
 
