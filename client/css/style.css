@@ -1,322 +1,419 @@
-html {
-	height: 100%;
+@charset "UTF-8";
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
 }
 
 body {
-	background: #e9432d;
-	font-family: Ubuntu;
-	font-size: 100%;
+  line-height: 1;
+}
 
-	display: flex;
-	flex-direction: column;
-	height: 100%;
+ol,
+ul {
+  list-style: none;
+}
+
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  background: #e9432d;
+  font-family: Ubuntu;
+  font-size: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 header {
-	flex: 0 0 auto;
+  flex: 0 0 auto;
+  background: white;
+  overflow: auto;
+  margin-bottom: 3px;
+  padding: 10px;
+}
+header nav {
+  float: right;
+  padding-top: 15px;
+}
+header .logo {
+  position: relative;
+  display: inline-block;
+  height: 200px;
+}
+header .logo::after {
+  /* text */
+  content: "Кчау";
+  font-family: Magneto_RUS_A;
+  font-size: 3rem;
+  font-style: italic;
+  color: black;
+  text-shadow: -7px 5px 2px rgba(0, 0, 0, 0.26);
+  border-bottom: 2px solid transparent;
+  opacity: 0;
+  /* position and size */
+  position: absolute;
+  top: calc(50% - 1.5rem);
+  left: 0;
+  z-index: 1;
+  transform: translateX(50%);
+  /* transition */
+  transition: transform 1s, color 2s, border-color 1.5s ease-out, opacity 0.5s;
+}
+header .logo:hover::after {
+  color: red;
+  border-color: red;
+  opacity: 1;
+  transform: translateX(220%);
+}
+header img {
+  float: left;
+  margin: 0 auto;
+  height: 100%;
+  position: relative;
+  z-index: 100;
+}
+header .title {
+  font-family: Magneto_RUS_A;
+  font-style: italic;
+  text-decoration: none;
+  font-size: 5rem;
+  width: 100%;
+  color: black;
+}
+header .title:hover {
+  color: red;
+  text-shadow: -7px 5px 2px rgba(0, 0, 0, 0.26);
 }
 
 main {
-	flex: 1 0 auto;
+  flex: 1 0 auto;
+  background: white;
+  overflow: auto;
+  padding: 20px;
+  /* Main - Authorization */
+  /* Main - Tabs (Profile) */
+}
+main .authorization {
+  max-width: 1200px;
+  background: #ddd;
+  margin: auto;
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+main .authorization .form {
+  flex: 0 0 calc(50% - 7.5px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 15px;
+  gap: 15px;
+}
+main .authorization .form p {
+  font-size: 20px;
+}
+main .authorization .form input {
+  font-family: Ubuntu;
+  font-size: 18px;
+  padding: 5px;
+  border: 2px solid black;
+  border-radius: 8px;
+}
+main .authorization .form input:focus {
+  outline: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+}
+main .authorization .buttons {
+  flex: 0 0 calc(50% - 7.5px);
+  display: flex;
+  justify-content: end;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 15px;
+}
+main .authorization .buttons button {
+  font-family: Ubuntu;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 8px;
+  border: 2px solid black;
+  padding: 5px 10px;
+  text-align: center;
+}
+main .authorization .buttons button:hover, main .authorization .buttons button:active {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+}
+main .authorization .buttons button:active {
+  color: rgba(0, 0, 0, 0.26);
+}
+main .main_block {
+  float: left;
+  width: 570px;
+}
+main .image {
+  float: right;
+  width: 285px;
+}
+main .tabs a span {
+  display: inline-block;
+  margin-right: 10px;
+  padding: 10px;
+  width: 150px;
+  text-align: center;
+  font-size: 20px;
+  border-radius: 5px 5px 0 0;
+  background: #ccc;
+  color: #1f1f1f;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+}
+main .tabs a span.active {
+  background: #ddd;
+  color: black;
+  box-shadow: none;
 }
 
 footer {
-	flex: 0 0 auto;
+  flex: 0 0 auto;
+  overflow: auto;
+  padding: 10px;
+  font-size: 18px;
+  color: #f9bf29;
+}
+footer footer .contact {
+  float: right;
+  text-align: right;
+  width: 570px;
+  padding-top: 15px;
 }
 
 a {
-	text-decoration: none;
-	color: black;
+  text-decoration: none;
+  color: black;
 }
-
 a:hover {
-	text-decoration: underline;
-	color: red;
-}
-
-header .container,
-aside .container,
-main .container,
-footer .container {
-	max-width: 1200px;
-	margin: auto;
+  text-decoration: underline;
+  color: red;
 }
 
 header,
 main,
 footer {
-	min-width: 855px;
+  min-width: 855px;
 }
 
-/* Header */
-
-header {
-	background: white;
-	overflow: auto;
-	margin-bottom: 3px;
-	padding: 10px;
-}
-
-header nav {
-	float: right;
-	padding-top: 15px;
-}
-
-header .logo {
-	position: relative;
-	display: inline-block;
-	height: 200px;
-}
-
-header .logo::after {
-	/* text */
-	content: "Кчау";
-	font-family: Magneto_RUS_A;
-	font-size: 3rem;
-	font-style: italic;
-	color: black;
-	text-shadow: -7px 5px 2px rgb(0 0 0 / 26%);
-	border-bottom: 2px solid transparent;
-	opacity: 0;
-
-	/* position and size */
-	position: absolute;
-	top: calc(50% - 1.5rem);
-	left: 0;
-	z-index: 1;
-	transform: translateX(50%);
-
-	/* transition */
-	transition: transform 1s, color 2s, border-color 1.5s ease-out, opacity 0.5s;
-	;
-}
-
-header .logo:hover::after {
-	color: red;
-	border-color: red;
-	opacity: 1;
-	transform: translateX(220%);
-}
-
-header img {
-	float: left;
-	margin: 0 auto;
-	height: 100%;
-	position: relative;
-	z-index: 100;
-}
-
-header .title {
-	font-family: Magneto_RUS_A;
-	text-decoration: none;
-	width: 100%;
-	font-size: 5rem;
-	font-style: italic;
-	color: black;
-}
-
-header .title:hover {
-	text-decoration: none;
-	color: red;
-	text-shadow: -7px 5px 2px rgb(0 0 0 / 26%);
-}
-
-/* Main */
-
-main {
-	background: white;
-	overflow: auto;
-	padding: 20px;
-}
-
-/* Main - Authorization */
-
-main .authorization {
-	max-width: 1200px;
-	background: #ddd;
-	margin: auto;
-	border-radius: 5px;
-}
-
-main .authorization p {
-	padding: 15px;
-	padding-bottom: 0px;
-	font-size: 20px;
-}
-
-main .authorization input {
-	font-family: Ubuntu;
-	margin: 10px;
-	font-size: 18px;
-	padding: 5px;
-	border: 2px solid black;
-	border-radius: 8px;
-}
-
-main .authorization input:focus {
-	outline: none;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-}
-
-main .authorization button {
-	font-family: Ubuntu;
-	/*расстояние от края*/
-	top: 50px;
-	left: 50px;
-	cursor: pointer;
-	font-size: 18px;
-	border-radius: 8px;
-	border: 2px solid black;
-	padding: 5px 10px;
-	margin: 10px;
-	text-align: center;
-	float: right;
-}
-
-main .authorization button:hover,
-main .authorization button:active {
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-}
-
-main .authorization button:active {
-	color: rgba(0, 0, 0, 0.26);
-}
-
-main .main_block {
-	float: left;
-	width: 570px;
-}
-
-main .image {
-	float: right;
-	width: 285px;
-}
-
-/* Main - Tabs (Profile) */
-
-main .tabs a span {
-	display: inline-block;
-	margin-right: 10px;
-	padding: 10px;
-	width: 150px;
-	text-align: center;
-	font-size: 20px;
-	border-radius: 5px 5px 0 0;
-	background: #ccc;
-	color: #1f1f1f;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-}
-
-main .tabs a span.active {
-	background: #ddd;
-	color: black;
-	box-shadow: none;
+.container {
+  max-width: 1200px;
+  margin: auto;
 }
 
 /* Content (Profile) */
-
 .content {
-	background: white;
-	padding-bottom: 10px;
+  background: white;
+  padding-bottom: 10px;
 }
-
 .content li {
-	list-style: none;
-	margin: 10px;
-	padding-left: 5px;
-	font-size: 20px;
-	border: right;
-	padding: 10px;
-	box-shadow: 0 0 0 10px #ddd;
+  list-style: none;
+  margin: 10px;
+  padding-left: 5px;
+  font-size: 20px;
+  border: right;
+  padding: 10px;
+  box-shadow: 0 0 0 10px #ddd;
 }
-
-.content p {
-	padding: 15px;
-	font-size: 20px;
-	color: red;
-}
-
-.content input {
-	font-family: Ubuntu;
-	width: 1160px;
-	margin: 10px;
-	padding: 10px;
-	font-size: 20px;
-	box-shadow: 0 0 0 10px #ddd;
-}
-
-.content .checkbox-wrapper {
-	margin: 1rem 0;
-}
-
-.content input[type='checkbox'] {
-	display: inline;
-	width: auto;
-	margin: 10px;
-	scale: 1.5;
-	box-shadow: none;
-}
-
-.content .checkbox-wrapper p {
-	display: inline;
-	color: black;
-}
-
 .content h3 {
-	margin: 10px;
-	font-size: 20px;
+  margin: 10px;
+  font-size: 20px;
 }
-
+.content p {
+  padding: 15px;
+  font-size: 20px;
+  color: red;
+}
 .content button {
-	font-family: Ubuntu;
-	font-size: 24px;
-	margin: 10px;
-	width: 20%;
-	padding: 10px;
-	background: white;
-	box-shadow: 0 0 0 10px #ddd;
+  font-family: Ubuntu;
+  font-size: 24px;
+  margin: 10px;
+  width: 20%;
+  padding: 10px;
+  background: white;
+  box-shadow: 0 0 0 10px #ddd;
+}
+.content input {
+  font-family: Ubuntu;
+  width: 1160px;
+  margin: 10px;
+  padding: 10px;
+  font-size: 20px;
+  box-shadow: 0 0 0 10px #ddd;
+}
+.content input[type=checkbox] {
+  display: inline;
+  width: auto;
+  scale: 1.5;
+  box-shadow: none;
+}
+.content .checkbox-wrapper {
+  margin: 1rem 0;
+}
+.content .checkbox-wrapper p {
+  display: inline;
+  color: black;
 }
 
 /* Links (Profile) */
-
 .linkEdit {
-	display: inline-block;
-	float: right;
-	vertical-align: center;
+  display: inline-block;
+  float: right;
+  vertical-align: center;
 }
 
 .linkEdit:hover {
-	padding: 0px;
-	background: #f9bc2a;
-	color: white;
-	text-decoration: none;
+  padding: 0px;
+  background: #f9bc2a;
+  color: white;
+  text-decoration: none;
 }
 
 .linkRemove {
-	display: inline-block;
-	float: right;
-	vertical-align: center;
+  display: inline-block;
+  float: right;
+  vertical-align: center;
 }
 
 .linkRemove:hover {
-	background: #ea5f55;
-	color: white;
-	text-decoration: none;
-}
-
-/* Footer */
-
-footer {
-	overflow: auto;
-	padding: 10px;
-	font-size: 18px;
-	color: white;
-	color: #f9bf29;
-}
-
-footer .contact {
-	float: right;
-	text-align: right;
-	width: 570px;
-	padding-top: 15px;
+  background: #ea5f55;
+  color: white;
+  text-decoration: none;
 }

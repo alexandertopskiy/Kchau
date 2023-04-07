@@ -1,4 +1,4 @@
-var main = function (UsersObjects) {
+const main = function (UsersObjects) {
     'use strict';
 
     // валидация гос.номера
@@ -12,6 +12,27 @@ var main = function (UsersObjects) {
     const $butLogin = $('<button>').text('Войти');
     const $butEdit = $('<button>').text(' Поменять номер');
     const $butDestroy = $('<button>').text('Удалить из системы');
+
+    $butLogin.on('click', function () {
+        const username = $input.val();
+        if (username === null || username.trim() === '') {
+            alert('Сначала введите номер');
+            return;
+        }
+
+        $.ajax({
+            'url': '/users/' + username,
+            'type': 'GET'
+        })
+            .done(() => {
+                // переход на страницу пользователя
+                window.location.replace('users/' + username + '/');
+            })
+            .fail(function (jqXHR) {
+                if (jqXHR.status === 404) alert('Пользователя не существует!');
+                else alert('Произошла ошибка! Повторите попытку позже!');
+            });
+    });
 
     $butRegister.on('click', function () {
         const username = $input.val();
@@ -34,27 +55,6 @@ var main = function (UsersObjects) {
             })
             .fail(function (jqXHR) {
                 if (jqXHR.status === 501) alert('Такой номер уже зарегистрирован!\nВведите другой номер ');
-                else alert('Произошла ошибка! Повторите попытку позже!');
-            });
-    });
-
-    $butLogin.on('click', function () {
-        const username = $input.val();
-        if (username === null || username.trim() === '') {
-            alert('Сначала введите номер');
-            return;
-        }
-
-        $.ajax({
-            'url': '/users/' + username,
-            'type': 'GET'
-        })
-            .done(() => {
-                // переход на страницу пользователя
-                window.location.replace('users/' + username + '/');
-            })
-            .fail(function (jqXHR) {
-                if (jqXHR.status === 404) alert('Пользователя не существует!');
                 else alert('Произошла ошибка! Повторите попытку позже!');
             });
     });
@@ -112,8 +112,9 @@ var main = function (UsersObjects) {
             });
     });
 
-    [$input, $butDestroy, $butEdit, $butLogin, $butRegister].forEach(el => {
-        $('main .authorization').append(el);
+    $('main .authorization .form').append($input);
+    [$butLogin, $butRegister, $butEdit, $butDestroy].forEach(el => {
+        $('main .authorization .buttons').append(el);
     });
 };
 
