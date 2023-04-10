@@ -1,76 +1,74 @@
-var liaWithEditOrDeleteOnClick = function (Receipt, callback) {
-    var $ReceiptListItem = $('<li>').text(Receipt.description),
-        $ReceiptEditLink = $('<a>').attr('href', 'Receipts/' + Receipt._id),
-        $ReceiptRemoveLink = $('<a>').attr('href', 'Receipts/' + Receipt._id);
+import { getFormattedDate } from './helpers.js';
 
-    $ReceiptEditLink.addClass('linkEdit');
-    $ReceiptRemoveLink.addClass('linkRemove');
+const createReceiptItem = (receipt, callback) => {
+    const $listItem = $('<li>').text(receipt.description);
+    const $actionLink = $('<a>').attr('href', 'Receipts/' + receipt._id);
 
-    if (Receipt.status === 'Не оплачено') {
-        $ReceiptEditLink.text('Оплатить');
-        $ReceiptEditLink.on('click', function () {
-            var newDescription = Receipt.description + '[Оплачено]';
+    const payHandler = () => {
+        const newDescription = receipt.description + '[Оплачено]';
 
-            if (newDescription !== null && newDescription.trim() !== '') {
-                $.ajax({
-                    'url': '/Receipts/' + Receipt._id,
-                    'type': 'PUT',
-                    'data': { 'description': newDescription, 'status': 'Оплачено' }
-                })
-                    .done(() => {
-                        Receipt.status = 'Оплачено';
-                        alert('Квитанция успешно оплачена');
-                        callback();
-                    })
-                    .fail(jqXHR => {
-                        if (jqXHR.status === 404) alert('Такой квитанции не существует!');
-                        else alert('Произошла ошибка! Повторите попытку позже!');
-                    });
-            }
-
-            return false;
-        });
-        $ReceiptListItem.append($ReceiptEditLink);
-    } else {
-        $ReceiptRemoveLink.text('Удалить');
-        $ReceiptRemoveLink.on('click', function () {
+        if (newDescription !== null && newDescription.trim() !== '')
             $.ajax({
-                url: '/Receipts/' + Receipt._id,
-                type: 'DELETE'
+                'url': '/Receipts/' + receipt._id,
+                'type': 'PUT',
+                'data': { 'description': newDescription, 'status': 'Оплачено' }
             })
                 .done(() => {
+                    receipt.status = 'Оплачено';
+                    alert('Квитанция успешно оплачена');
                     callback();
-                    alert('Квитанция успешно удалена');
                 })
                 .fail(jqXHR => {
                     if (jqXHR.status === 404) alert('Такой квитанции не существует!');
                     else alert('Произошла ошибка! Повторите попытку позже!');
                 });
-            return false;
-        });
-        $ReceiptListItem.append($ReceiptRemoveLink);
-    }
 
-    return $ReceiptListItem;
+        return false;
+    };
+    const deleteHandler = () => {
+        $.ajax({
+            url: '/Receipts/' + receipt._id,
+            type: 'DELETE'
+        })
+            .done(() => {
+                callback();
+                alert('Квитанция успешно удалена');
+            })
+            .fail(jqXHR => {
+                if (jqXHR.status === 404) alert('Такой квитанции не существует!');
+                else alert('Произошла ошибка! Повторите попытку позже!');
+            });
+        return false;
+    };
+
+    if (receipt.status === 'Не оплачено')
+        $actionLink.addClass('link link-edit').text('Оплатить').on('click', payHandler);
+    else $actionLink.addClass('link link-remove').text('Удалить').on('click', deleteHandler);
+
+    $listItem.append($actionLink);
+    return $listItem;
 };
 
-var main = function (ReceiptObjects) {
+const main = function () {
     'use strict';
 
     // создание пустого массива с вкладками
-    var tabs = [];
+    const tabs = [];
 
     // Вкладка "Новые"
     tabs.push({
         'name': 'Мои квитанции',
-        'content': function (callback) {
-            $.getJSON('Receipts.json', function (ReceiptObjects) {
-                var $content = $('<ul>');
-                for (var i = ReceiptObjects.length - 1; i >= 0; i--) {
+        'content': callback => {
+            $.getJSON('Receipts.json', receipts => {
+                const $content = $('<ul>');
+
+                if (receipts.length === 0) $content.append($('<h3>').text('Квитанции не найдены!'));
+                for (let i = receipts.length - 1; i >= 0; i--) {
                     const clickCallback = () => $('.tabs a:first-child span').trigger('click');
-                    const $ReceiptListItem = liaWithEditOrDeleteOnClick(ReceiptObjects[i], clickCallback);
-                    $content.append($ReceiptListItem);
+                    const $listItem = createReceiptItem(receipts[i], clickCallback);
+                    $content.append($listItem);
                 }
+
                 callback(null, $content);
             }).fail(jqXHR => callback(jqXHR.status, null));
         }
@@ -79,15 +77,19 @@ var main = function (ReceiptObjects) {
     // Вкладка "Неоплаченные"
     tabs.push({
         'name': 'Неоплаченные',
-        'content': function (callback) {
-            $.getJSON('Receipts.json', function (ReceiptObjects) {
+        'content': callback => {
+            $.getJSON('Receipts.json', receipts => {
                 const $content = $('<ul>');
-                for (let i = 0; i < ReceiptObjects.length; i++) {
-                    if (ReceiptObjects[i].status !== 'Не оплачено') continue;
+                const unpaidReceipts = receipts.filter(receipt => receipt.status === 'Не оплачено');
+                console.log(unpaidReceipts);
+
+                if (unpaidReceipts.length === 0) $content.append($('<h3>').text('Все квитанции оплачены!'));
+                for (let i = 0; i < unpaidReceipts.length; i++) {
                     const clickCallback = () => $('.tabs a:nth-child(2) span').trigger('click');
-                    const $ReceiptListItem = liaWithEditOrDeleteOnClick(ReceiptObjects[i], clickCallback);
-                    $content.append($ReceiptListItem);
+                    const $listItem = createReceiptItem(unpaidReceipts[i], clickCallback);
+                    $content.append($listItem);
                 }
+
                 callback(null, $content);
             }).fail(jqXHR => callback(jqXHR.status, null));
         }
@@ -96,89 +98,72 @@ var main = function (ReceiptObjects) {
     // Вкладка "Добавить"
     tabs.push({
         'name': 'Добавить',
-        'content': function () {
-            $.get('Receipts.json', () => {
-                const $inputTitle = $('<h3>').text('Введите новерок на стоянке: ');
-                const $input = $('<input>').addClass('description');
+        'content': callback => {
+            const $content = $('<div>').addClass('add-form');
+            const $inputTitle = $('<h3>').text('Введите новерок на стоянке: ');
+            const $input = $('<input>').addClass('description');
+            const $checkbox = $('<input type="checkbox">');
+            const $label = $('<label>').addClass('form-control').append([$checkbox, 'Уже оплачено']);
+            const $button = $('<button>').text('Добавить');
+            [$inputTitle, $input, $label, $button].forEach(el => $content.append(el));
 
-                const $checboxWrapper = $('<div>').addClass('checkbox-wrapper');
-                const $checkboxTitle = $('<p>').text('Уже оплачено?');
-                const $checkbox = $('<input type="checkbox">');
+            const createReceipt = () => {
+                const receiptNumber = $input.val().trim();
 
-                const $button = $('<button>').text('Добавить');
-                const $content = $('<ul>');
-
-                $content.append($input);
-
-                $checboxWrapper.append($checkbox);
-                $checboxWrapper.append($checkboxTitle);
-
-                [$inputTitle, $content, $checboxWrapper, $button].forEach(el => $('main .content').append(el));
-
-                function btnCallback() {
-                    const checkTime = num => (num < 10 ? '0' + num : num);
-                    const nowDate = new Date();
-                    const year = nowDate.getFullYear();
-                    const month = checkTime(nowDate.getMonth());
-                    const day = checkTime(nowDate.getDate());
-                    const hour = checkTime(nowDate.getHours());
-                    const minutes = checkTime(nowDate.getMinutes());
-
-                    const fullDate = day + '.' + month + '.' + year + ' ' + hour + ':' + minutes;
-
-                    const isPaid = $checkbox.is(':checked');
-                    const status = isPaid ? 'Оплачено' : 'Не оплачено';
-                    const description = '№' + $input.val() + ' (' + fullDate + ')' + (isPaid ? ' [Оплачено]' : '');
-
-                    const newReceipt = { 'description': description, 'status': status };
-
-                    $.post('Receipts', newReceipt, () => $('.tabs a:first-child span').trigger('click'));
+                if (!receiptNumber) {
+                    alert('Сначала введите номер!');
+                    return;
                 }
 
-                $button.on('click', () => btnCallback());
-                // обработка нажатия "enter"
-                $input.on('keydown', e => {
-                    if (e.which === 13) btnCallback();
-                });
+                const currentDate = getFormattedDate();
+                const isPaid = $checkbox.is(':checked');
+                const description = '№' + receiptNumber + ' (' + currentDate + ')' + (isPaid ? ' [Оплачено]' : '');
+                const status = isPaid ? 'Оплачено' : 'Не оплачено';
+
+                const newReceipt = { 'description': description, 'status': status };
+
+                $.post('Receipts', newReceipt, () => $('.tabs a:first-child span').trigger('click')).fail(jqXHR =>
+                    callback(jqXHR.status, null)
+                );
+            };
+
+            $button.on('click', () => createReceipt());
+            // обработка нажатия "enter"
+            $input.on('keydown', e => {
+                if (e.which === 13) createReceipt();
             });
+
+            callback(null, $content);
         }
     });
 
     // Вкладка "Выйти"
     tabs.push({
         'name': 'Выйти',
-        'content': function () {
-            document.location.href = '/index.html';
-        }
+        'content': () => (document.location.href = '/index.html')
     });
 
-    tabs.forEach(function (tab) {
+    tabs.forEach(tab => {
         const $aElement = $('<a>').attr('href', '');
         const $spanElement = $('<span>').text(tab.name);
 
         $aElement.append($spanElement);
         $('main .tabs').append($aElement);
 
-        $spanElement.on('click', function () {
+        $spanElement.on('click', () => {
             $('.tabs a span').removeClass('active');
             $spanElement.addClass('active');
             $('main .content').empty();
-            tab.content(function (errorStatus, $content) {
-                if (errorStatus !== null) {
-                    alert('Возникла проблема при обработке запроса: ' + errorStatus);
-                } else {
-                    $('main .content').append($content);
-                }
+            tab.content((errorStatus, $content) => {
+                if (errorStatus !== null) alert('Возникла проблема при обработке запроса: ' + errorStatus);
+                else $('main .content').append($content);
             });
             return false;
         });
     });
 
+    // при открытии страницы выбирать 1-ю вкладку
     $('.tabs a:first-child span').trigger('click');
 };
 
-$(document).ready(function () {
-    $.getJSON('Receipts.json', function (ReceiptObjects) {
-        main(ReceiptObjects);
-    });
-});
+$(document).ready(main);

@@ -55,10 +55,9 @@ ifconfig
 
 ## Запуск сервера локально
 
-1. Установить [Node.js](https://nodejs.org/en/)
+Для локального запуска на машине должны быть установлены [Node.js](https://nodejs.org/en/) и MongoDB [MongoDB](https://www.mongodb.com/docs/manual/administration/install-community/)
 
-2. Установить [MongoDB](https://www.mongodb.com/docs/manual/administration/install-community/)  
-   Для MacOS (на февраль 2023):
+-   Установка MongoDB для MacOS (на февраль 2023):
 
 ```bash
 xcode-select --install
@@ -67,23 +66,34 @@ brew install mongodb-community
 
 sudo mkdir -p /System/Volumes/Data/data/db # mongodb data directory
 sudo chown -R `id -un` /System/Volumes/Data/data/db
-
-# НУЖНО ЗАПУСКАТЬ КАЖДЫЙ РАЗ ВМЕСТЕ С ПРИЛОЖЕНИЕМ!
-sudo mongod --dbpath /System/Volumes/Data/data/db # запуск сервера mongodb (ctrl+c для выхода/завершения)
-
-# в другом окне терминала (при активном сервере)
-mongosh # запуск консоли управления mongodb (для выхода написать 'quit')
 ```
 
-3. Находясь в [директории сервера](./server/) запустить в терминале команды:
+-   Также находясь в [директории сервера](./server/) необходимо установить все зависимости:
 
 ```bash
 npm install # установка всех зависимостей
+```
 
+Непосредственно запуск состоит из следующих этапов:
+
+1. Запуск сервера mongodb (НУЖНО ЗАПУСКАТЬ КАЖДЫЙ РАЗ ВМЕСТЕ С ПРИЛОЖЕНИЕМ!)
+
+```bash
+sudo mongod --dbpath /System/Volumes/Data/data/db # (ctrl+c для выхода/завершения)
+
+# в другом окне терминала (при активном сервере можно запустить консоли управления mongodb)
+mongosh # (написать 'quit' для выхода)
+```
+
+2. Запуск приложения (находясь в [директории сервера](./server/)):
+
+```bash
 npm start
 # или
 node server.js
 ```
+
+Оба пункта (запуск сервера mongodb и приложения) необхоимо выполнять каждый раз
 
 ## Управление базой данных
 

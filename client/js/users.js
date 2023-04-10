@@ -1,51 +1,54 @@
+import { validateLicensePlate } from './helpers.js';
+
 const main = function (UsersObjects) {
     'use strict';
 
-    // валидация гос.номера
-    const validateLicensePlate = plate => {
-        const example = /^[АВЕКМНОРСТУХ]\d{3}(?<!000)[АВЕКМНОРСТУХ]{2}\d{2,3}$/iu;
-        return example.test(plate);
-    };
-
+    // UI-элементы (поле ввода номера и кнопки)
     const $input = $("<input placeholder='а777аа777'>").addClass('username');
-    const $butRegister = $('<button>').text('Зарегистрироваться в системе');
     const $butLogin = $('<button>').text('Войти');
+    const $butRegister = $('<button>').text('Зарегистрироваться в системе');
     const $butEdit = $('<button>').text(' Поменять номер');
     const $butDestroy = $('<button>').text('Удалить из системы');
 
-    $butLogin.on('click', function () {
-        const username = $input.val();
-        if (username === null || username.trim() === '') {
-            alert('Сначала введите номер');
-            return;
-        }
+    // метод валидации введенного номера
+    const validatedInput = () => {
+        const username = $input.val().trim();
+        if (!username) alert('Сначала введите номер');
+        else if (!validateLicensePlate(username)) {
+            alert('Введенные данные не соответствуют формату гос.номера РФ!\nПовторите ввод');
+        } else return username;
+
+        $input.val('');
+        return false;
+    };
+
+    // метод для логина (вынесен в отдельный метод для переиспользования)
+    const login = () => {
+        const username = validatedInput();
+        if (!username) return;
 
         $.ajax({
             'url': '/users/' + username,
             'type': 'GET'
         })
-            .done(() => {
-                // переход на страницу пользователя
-                window.location.replace('users/' + username + '/');
-            })
-            .fail(function (jqXHR) {
+            // переход на страницу пользователя
+            .done(() => window.location.replace('users/' + username + '/'))
+            .fail(jqXHR => {
                 if (jqXHR.status === 404) alert('Пользователя не существует!');
                 else alert('Произошла ошибка! Повторите попытку позже!');
             });
+    };
+    // обработка нажатия "enter"
+    $input.on('keydown', e => {
+        if (e.which === 13) login();
     });
 
-    $butRegister.on('click', function () {
-        const username = $input.val();
-        if (username === null || username.trim() === '') {
-            alert('Сначала введите номер');
-            return;
-        }
+    // Обработка нажатий на кнопки
+    $butLogin.on('click', () => login());
 
-        if (!validateLicensePlate(username)) {
-            alert('Введенные данные не соответствуют формату гос.номера РФ!\nПовторите ввод');
-            $input.val('');
-            return;
-        }
+    $butRegister.on('click', () => {
+        const username = validatedInput();
+        if (!username) return;
 
         const newUser = { 'username': username };
         $.post('users', newUser, () => UsersObjects.push(newUser))
@@ -53,22 +56,18 @@ const main = function (UsersObjects) {
                 alert('Аккаунт успешно создан!');
                 $butLogin.trigger('click');
             })
-            .fail(function (jqXHR) {
+            .fail(jqXHR => {
                 if (jqXHR.status === 501) alert('Такой номер уже зарегистрирован!\nВведите другой номер ');
                 else alert('Произошла ошибка! Повторите попытку позже!');
             });
     });
 
-    $butEdit.on('click', function () {
-        const username = $input.val();
-        if (username === null || username.trim() === '') {
-            alert('Сначала введите номер');
-            return;
-        }
+    $butEdit.on('click', () => {
+        const username = validatedInput();
+        if (!username) return;
 
         const newUsername = prompt('Введите новый гос.номер, который будет закреплен за Вашим профилем', $input.val());
-        if (newUsername === null || newUsername === username) return;
-        if (!validateLicensePlate(newUsername)) {
+        if (!newUsername.trim() || !validateLicensePlate(newUsername)) {
             alert('Введенные данные не соответствуют формату гос.номера РФ!\nПовторите ввод');
             return;
         }
@@ -82,19 +81,16 @@ const main = function (UsersObjects) {
                 alert('Ваш гос.номер успешно изменен');
                 $input.val(newUsername);
             })
-            .fail(function (jqXHR) {
+            .fail(jqXHR => {
                 if (jqXHR.status === 404) alert('Пользователя не существует!');
                 else if (jqXHR.status === 501) alert('Пользователь с таким номером уже существует!');
                 else alert('Произошла ошибка! Повторите попытку позже!');
             });
     });
 
-    $butDestroy.on('click', function () {
-        const username = $input.val();
-        if (username === null || username.trim() === '') {
-            alert('Сначала введите номер');
-            return;
-        }
+    $butDestroy.on('click', () => {
+        const username = validatedInput();
+        if (!username) return;
 
         if (!confirm('Вы уверены, что хотете удалить профиль ' + username + '?')) return;
 
@@ -106,7 +102,7 @@ const main = function (UsersObjects) {
                 $input.val('');
                 alert('Ваш профиль успешно удален');
             })
-            .fail(function (jqXHR) {
+            .fail(jqXHR => {
                 if (jqXHR.status === 404) alert('Пользователя не существует!');
                 else alert('Произошла ошибка! Повторите попытку позже!');
             });
@@ -118,8 +114,4 @@ const main = function (UsersObjects) {
     });
 };
 
-$(document).ready(function () {
-    $.getJSON('users.json', function (UsersObjects) {
-        main(UsersObjects);
-    });
-});
+$(document).ready(() => $.getJSON('users.json', UsersObjects => main(UsersObjects)));

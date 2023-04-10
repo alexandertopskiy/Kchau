@@ -140,6 +140,71 @@ table {
   box-sizing: border-box;
 }
 
+:root {
+  --form-control-color: #e9432d;
+  --form-control-disabled: #959495;
+}
+
+.form-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 1.25rem !important;
+}
+.form-control + .form-control {
+  margin-top: 1em;
+}
+.form-control--disabled {
+  color: var(--form-control-disabled);
+  cursor: not-allowed;
+}
+
+input[type=checkbox] {
+  /* Add if not using autoprefixer */
+  -webkit-appearance: none;
+  /* Remove most all native input styles */
+  -moz-appearance: none;
+       appearance: none;
+  /* For iOS < 15 */
+  background-color: var(--form-background);
+  /* Not removed via appearance */
+  margin: 0;
+  font: inherit;
+  color: currentColor;
+  width: 1rem !important;
+  height: 1rem;
+  border: 0.15em solid currentColor;
+  border-radius: 0.15em;
+  padding: 0.5rem !important;
+  display: grid;
+  place-content: center;
+}
+input[type=checkbox]::before {
+  content: "";
+  width: 0.65em;
+  height: 0.65em;
+  -webkit-clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+          clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  transform: scale(0);
+  transform-origin: bottom left;
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em var(--form-control-color);
+  /* Windows High Contrast Mode */
+  background-color: CanvasText;
+}
+input[type=checkbox]:checked::before {
+  transform: scale(1);
+}
+input[type=checkbox]:focus {
+  outline: max(2px, 0.15em) solid currentColor;
+  outline-offset: max(2px, 0.15em);
+}
+input[type=checkbox]:disabled {
+  --form-control-color: var(--form-control-disabled);
+  color: var(--form-control-disabled);
+  cursor: not-allowed;
+}
+
 html {
   height: 100%;
 }
@@ -151,6 +216,26 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+
+header,
+main,
+footer {
+  min-width: 855px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+a:hover {
+  text-decoration: underline;
+  color: red;
 }
 
 header {
@@ -219,8 +304,6 @@ main {
   background: white;
   overflow: auto;
   padding: 20px;
-  /* Main - Authorization */
-  /* Main - Tabs (Profile) */
 }
 main .authorization {
   max-width: 1200px;
@@ -257,7 +340,7 @@ main .authorization .form input:focus {
 main .authorization .buttons {
   flex: 0 0 calc(50% - 7.5px);
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: flex-end;
   flex-wrap: wrap;
   gap: 15px;
@@ -278,30 +361,107 @@ main .authorization .buttons button:hover, main .authorization .buttons button:a
 main .authorization .buttons button:active {
   color: rgba(0, 0, 0, 0.26);
 }
-main .main_block {
-  float: left;
-  width: 570px;
-}
-main .image {
-  float: right;
-  width: 285px;
-}
 main .tabs a span {
   display: inline-block;
   margin-right: 10px;
-  padding: 10px;
-  width: 150px;
+  padding: 10px 20px;
   text-align: center;
   font-size: 20px;
   border-radius: 5px 5px 0 0;
   background: #ccc;
   color: #1f1f1f;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  box-shadow: inset 3px -2px 8px rgba(0, 0, 0, 0.26);
 }
 main .tabs a span.active {
   background: #ddd;
   color: black;
   box-shadow: none;
+}
+main .content {
+  background: white;
+  border: 10px solid #ddd;
+  padding: 15px;
+  /* Links (Profile) */
+}
+main .content li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style: none;
+  margin: 10px;
+  font-size: 20px;
+  padding: 10px;
+  box-shadow: 0 0 0 8px #ddd;
+}
+main .content li:first-child {
+  border-radius: 10px 10px 0 0;
+}
+main .content li:last-child {
+  border-radius: 0 0 10px 10px;
+}
+main .content li:first-child:last-child {
+  border-radius: 10px 10px 10px 10px;
+}
+main .content h3 {
+  margin: 10px 0;
+  font-size: 20px;
+}
+main .content .add-form {
+  display: flex;
+  flex-direction: column;
+}
+main .content .add-form button {
+  align-self: flex-end;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 20px;
+  margin: 10px;
+  width: 20%;
+  padding: 10px;
+  background: white;
+  box-shadow: 0 0 0 10px #ddd;
+  border: none;
+  transition: all 0.2s ease-out;
+}
+main .content .add-form button:hover {
+  box-shadow: 0 0 0 8px #ddd, inset 0 0 0 3px #ededed;
+}
+main .content .add-form input {
+  font-family: inherit;
+  font-size: 20px;
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 8px solid #ddd;
+}
+main .content .add-form input:focus {
+  outline: none;
+}
+main .content .link {
+  display: inline-block;
+  padding: 10px 25px;
+  flex: 0 0 20%;
+  text-align: center;
+  border-radius: 6px;
+  color: #404040;
+  transition: all 0.3s ease-out;
+}
+main .content .link:hover {
+  text-decoration: none;
+}
+main .content .link-edit {
+  background: #f8e4b4;
+}
+main .content .link-edit:hover {
+  background: #f9bc2a;
+  color: white;
+}
+main .content .link-remove {
+  background: #e7a29d;
+}
+main .content .link-remove:hover {
+  background: #ea5f55;
+  color: white;
 }
 
 footer {
@@ -316,104 +476,4 @@ footer footer .contact {
   text-align: right;
   width: 570px;
   padding-top: 15px;
-}
-
-a {
-  text-decoration: none;
-  color: black;
-}
-a:hover {
-  text-decoration: underline;
-  color: red;
-}
-
-header,
-main,
-footer {
-  min-width: 855px;
-}
-
-.container {
-  max-width: 1200px;
-  margin: auto;
-}
-
-/* Content (Profile) */
-.content {
-  background: white;
-  padding-bottom: 10px;
-}
-.content li {
-  list-style: none;
-  margin: 10px;
-  padding-left: 5px;
-  font-size: 20px;
-  border: right;
-  padding: 10px;
-  box-shadow: 0 0 0 10px #ddd;
-}
-.content h3 {
-  margin: 10px;
-  font-size: 20px;
-}
-.content p {
-  padding: 15px;
-  font-size: 20px;
-  color: red;
-}
-.content button {
-  font-family: Ubuntu;
-  font-size: 24px;
-  margin: 10px;
-  width: 20%;
-  padding: 10px;
-  background: white;
-  box-shadow: 0 0 0 10px #ddd;
-}
-.content input {
-  font-family: Ubuntu;
-  width: 1160px;
-  margin: 10px;
-  padding: 10px;
-  font-size: 20px;
-  box-shadow: 0 0 0 10px #ddd;
-}
-.content input[type=checkbox] {
-  display: inline;
-  width: auto;
-  scale: 1.5;
-  box-shadow: none;
-}
-.content .checkbox-wrapper {
-  margin: 1rem 0;
-}
-.content .checkbox-wrapper p {
-  display: inline;
-  color: black;
-}
-
-/* Links (Profile) */
-.linkEdit {
-  display: inline-block;
-  float: right;
-  vertical-align: center;
-}
-
-.linkEdit:hover {
-  padding: 0px;
-  background: #f9bc2a;
-  color: white;
-  text-decoration: none;
-}
-
-.linkRemove {
-  display: inline-block;
-  float: right;
-  vertical-align: center;
-}
-
-.linkRemove:hover {
-  background: #ea5f55;
-  color: white;
-  text-decoration: none;
 }
