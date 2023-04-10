@@ -1,4 +1,5 @@
 @import "_reset";
+@import "inputs";
 
 html {
 	height: 100%;
@@ -12,6 +13,27 @@ body {
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+}
+
+header,
+main,
+footer {
+	min-width: 855px;
+}
+
+.container {
+	max-width: 1200px;
+	margin: auto;
+}
+
+a {
+	text-decoration: none;
+	color: black;
+
+	&:hover {
+		text-decoration: underline;
+		color: red;
+	}
 }
 
 header {
@@ -91,8 +113,6 @@ main {
 	overflow: auto;
 	padding: 20px;
 
-	/* Main - Authorization */
-
 	& .authorization {
 		max-width: 1200px;
 		background: #ddd;
@@ -132,16 +152,14 @@ main {
 		}
 
 		.buttons {
-			// flex: 0 0 50%;
 			flex: 0 0 calc(50% - 7.5px);
 
 			display: flex;
-			justify-content: end;
+			justify-content: flex-end;
 			align-items: flex-end;
 			flex-wrap: wrap;
 			gap: 15px;
 
-			// padding: 15px 15px 15px 0;
 			padding: 15px;
 
 			& button {
@@ -165,33 +183,125 @@ main {
 		}
 	}
 
-	.main_block {
-		float: left;
-		width: 570px;
+	.tabs {
+		a span {
+			display: inline-block;
+			margin-right: 10px;
+			padding: 10px 20px;
+			text-align: center;
+			font-size: 20px;
+			border-radius: 5px 5px 0 0;
+			background: #ccc;
+			color: #1f1f1f;
+			box-shadow: inset 3px -2px 8px rgba(0, 0, 0, 0.26);
+
+			&.active {
+				background: #ddd;
+				color: black;
+				box-shadow: none;
+			}
+		}
 	}
 
-	.image {
-		float: right;
-		width: 285px;
-	}
+	.content {
+		background: white;
+		border: 10px solid #ddd;
+		padding: 15px;
 
-	/* Main - Tabs (Profile) */
-	.tabs a span {
-		display: inline-block;
-		margin-right: 10px;
-		padding: 10px;
-		width: 150px;
-		text-align: center;
-		font-size: 20px;
-		border-radius: 5px 5px 0 0;
-		background: #ccc;
-		color: #1f1f1f;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+		li {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
 
-		&.active {
-			background: #ddd;
-			color: black;
-			box-shadow: none;
+			list-style: none;
+			margin: 10px;
+			font-size: 20px;
+			padding: 10px;
+			box-shadow: 0 0 0 8px #ddd;
+
+			&:first-child {
+				border-radius: 10px 10px 0 0;
+			}
+			&:last-child {
+				border-radius: 0 0 10px 10px;
+			}
+			&:first-child:last-child {
+				border-radius: 10px 10px 10px 10px;
+			}
+		}
+
+		h3 {
+			margin: 10px 0;
+			font-size: 20px;
+		}
+
+		.add-form {
+			display: flex;
+			flex-direction: column;
+
+			button {
+				align-self: flex-end;
+				cursor: pointer;
+				font-family: inherit;
+				font-size: 20px;
+				margin: 10px;
+				width: 20%;
+				padding: 10px;
+				background: white;
+				box-shadow: 0 0 0 10px #ddd;
+				border: none;
+
+				transition: all 0.2s ease-out;
+
+				&:hover {
+					box-shadow: 0 0 0 8px #ddd, inset 0 0 0 3px #ededed;
+				}
+			}
+
+			input {
+				font-family: inherit;
+				font-size: 20px;
+				width: 100%;
+				padding: 10px;
+				margin: 10px 0;
+				border: 8px solid #ddd;
+
+				&:focus {
+					outline: none;
+				}
+			}
+		}
+
+		/* Links (Profile) */
+		.link {
+			display: inline-block;
+			padding: 10px 25px;
+			flex: 0 0 20%;
+			text-align: center;
+			border-radius: 6px;
+			color: #404040;
+
+			&:hover {
+				text-decoration: none;
+			}
+
+			transition: all 0.3s ease-out;
+
+			&-edit {
+				background: #f8e4b4;
+				&:hover {
+					background: #f9bc2a;
+					color: white;
+				}
+			}
+
+			&-remove {
+				background: #e7a29d;
+				&:hover {
+					background: #ea5f55;
+					color: white;
+				}
+			}
 		}
 	}
 }
@@ -209,115 +319,4 @@ footer {
 		width: 570px;
 		padding-top: 15px;
 	}
-}
-
-a {
-	text-decoration: none;
-	color: black;
-
-	&:hover {
-		text-decoration: underline;
-		color: red;
-	}
-}
-
-header,
-main,
-footer {
-	min-width: 855px;
-}
-
-.container {
-	max-width: 1200px;
-	margin: auto;
-}
-
-/* Content (Profile) */
-
-.content {
-	background: white;
-	padding-bottom: 10px;
-
-	li {
-		list-style: none;
-		margin: 10px;
-		padding-left: 5px;
-		font-size: 20px;
-		border: right;
-		padding: 10px;
-		box-shadow: 0 0 0 10px #ddd;
-	}
-
-	h3 {
-		margin: 10px;
-		font-size: 20px;
-	}
-
-	p {
-		padding: 15px;
-		font-size: 20px;
-		color: red;
-	}
-
-	button {
-		font-family: Ubuntu;
-		font-size: 24px;
-		margin: 10px;
-		width: 20%;
-		padding: 10px;
-		background: white;
-		box-shadow: 0 0 0 10px #ddd;
-	}
-
-	input {
-		font-family: Ubuntu;
-		width: 1160px;
-		margin: 10px;
-		padding: 10px;
-		font-size: 20px;
-		box-shadow: 0 0 0 10px #ddd;
-
-		&[type="checkbox"] {
-			display: inline;
-			width: auto;
-			scale: 1.5;
-			box-shadow: none;
-		}
-	}
-
-	.checkbox-wrapper {
-		margin: 1rem 0;
-
-		& p {
-			display: inline;
-			color: black;
-		}
-	}
-}
-
-/* Links (Profile) */
-
-.linkEdit {
-	display: inline-block;
-	float: right;
-	vertical-align: center;
-}
-
-.linkEdit:hover {
-	padding: 0px;
-	background: #f9bc2a;
-	color: white;
-	text-decoration: none;
-}
-
-.linkRemove {
-	display: inline-block;
-	float: right;
-	vertical-align: center;
-}
-
-.linkRemove:hover {
-	background: #ea5f55;
-	color: white;
-	text-decoration: none;
 }
